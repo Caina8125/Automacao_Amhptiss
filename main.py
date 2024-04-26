@@ -1,3 +1,3 @@
 from Presentation.Desktop.Login import Application
 
-Application().janela.mainloop()
+autenticao = Application().janela.mainloop()
