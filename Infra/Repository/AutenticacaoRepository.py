@@ -19,7 +19,12 @@ def auth(login,senha):
     }
 
     post = requests.post( urlAuth, usuario_login, proxies=proxies)
-    time.sleep(1)
     content = json.loads(post.content)
-    roles = content['UsuarioToken']["Claims"]
-    return roles
+    token = content['AccessToken']
+    print('Token =>',token)
+
+    # time.sleep(1)
+    # print(post.text)
+    # content = json.loads(post.content)
+    # roles = content['UsuarioToken']["Claims"]
+    # return roles

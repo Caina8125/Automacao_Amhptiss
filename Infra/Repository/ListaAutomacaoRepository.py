@@ -34,13 +34,13 @@ def obterListaFinanceiro():
     return automacaoFinanceiro
 
 def obterListaGlosa():
-    automacaoGlosa = ["Glosa - Gerador de Planilha GDF",
-                            "Glosa - Recursar GEAP Duplicado",
-                            "Glosa - Recursar GEAP Sem Duplicado",
-                            "Glosa - Recursar Postal",
-                            "Glosa - Recursar Saúde Caixa",
-                            "Glosa - Recursar Serpro",
-                            "Glosa - Recursar SIS",]
+    automacaoGlosa = [  "Glosa - Gerador de Planilha GDF",
+                        "Glosa - Recursar GEAP Duplicado",
+                        "Glosa - Recursar GEAP Sem Duplicado",
+                        "Glosa - Recursar Postal",
+                        "Glosa - Recursar Saúde Caixa",
+                        "Glosa - Recursar Serpro",
+                        "Glosa - Recursar SIS",]
     return automacaoGlosa
 
 def obterListaTesouraria():
