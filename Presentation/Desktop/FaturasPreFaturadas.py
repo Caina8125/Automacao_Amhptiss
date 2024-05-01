@@ -1,7 +1,15 @@
-import Application.AppService.FaturasPreFaturadasAppService as faturasAppService
+import customtkinter
+from CTkTable import *
 
-class TelaFaturas:
-    def __init__(self,janela):
-        pass
+root = customtkinter.CTk()
 
+value = [[1,2,3,4,5],
+         [1,2,3,4,5],
+         [1,2,3,4,5],
+         [1,2,3,4,5],
+         [1,2,3,4,5]]
 
+table = CTkTable(master=root, row=5, column=5, values=value)
+table.pack(expand=True, fill="both", padx=20, pady=20)
+
+root.mainloop()

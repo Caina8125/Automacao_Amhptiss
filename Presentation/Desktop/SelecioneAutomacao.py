@@ -9,7 +9,7 @@ class TelaSelecioneAutomacoes:
     def __init__(self, setorUsuario, janela):
         # self.bottonSair(janela)
         self.comboAutomacoes(setorUsuario, janela)
-        self.botaoIniciarAutomacao(janela)
+        self.botaoAvancar(janela)
         
     def logOf(self):
         # self.bottonSair.pack_forget()

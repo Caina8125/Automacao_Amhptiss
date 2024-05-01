@@ -22,7 +22,4 @@ class Aplication:
             self.corAtual = "light"
             customtkinter.set_appearance_mode(self.corAtual)
 
-
 autenticao = Aplication().janela.mainloop()
-
-# print(autenticao)

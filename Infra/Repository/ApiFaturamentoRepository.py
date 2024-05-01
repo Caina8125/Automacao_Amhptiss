@@ -2,40 +2,8 @@ import json
 import time
 import requests
 
-def auth():
-    global token
-    global proxies
-
-    urlAuth = 'https://amhptiss.amhp.com.br/api/Auth'
-    proxies = {
-        "http": f"http://lucas.timoteo:81259018@10.0.0.230:3128/",
-        "https": f"http://lucas.timoteo:81259018@10.0.0.230:3128/"
-    }
-
-    usuario_login = {
-        "Usuario": "lucas.timoteo",
-        "Senha" : "Caina8125"
-    }
-
-    post = requests.post( urlAuth, usuario_login, proxies=proxies)
-    time.sleep(2)
-    content = json.loads(post.content)
-    time.sleep(1)
-    token = content['AccessToken']
-    time.sleep(1)
-    print('Token =>',token)
-    print('')
-    print('')
-
-
-
 def apiFaturamento(login,senha, tipoNegociacao, convenioId, statusProcesso, dataInicio, dataFim,token):
     urlApi = f'http://10.0.0.142:9000/api/faturamento/{tipoNegociacao}/processo-remessa-sem-recurso?convenioId={convenioId}&statusProcesso={statusProcesso}&dataInicio={dataInicio}&dataFim={dataFim}'
-
-    proxies = {
-        "http": f"http://lucas.timoteo:81259018@10.0.0.230:3128",
-        "https": f"http://lucas.timoteo:81259018@10.0.0.230:3128"
-    }
 
     headers = {
         'Authorization': f'Bearer {token}',
