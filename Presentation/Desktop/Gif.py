@@ -46,5 +46,6 @@ class ImageLabel(customtkinter.CTkLabel):
         self.lbl.load(r"C:\Automacao_Amhptiss\Infra\Arquivos\loader2.gif")
 
     def ocultarGif(self):
+        # self.unload(self)
         self.info.pack_forget()
         self.lbl.pack_forget()

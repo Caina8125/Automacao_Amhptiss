@@ -6,7 +6,7 @@ class Aplication:
         self.corAtual = "light"
         customtkinter.set_appearance_mode(self.corAtual)
         self.janela = customtkinter.CTk()
-        self.janela.geometry("550x400")
+        self.janela.geometry("640x480")
         self.janela.title("AMHP - Automações")
         self.janela.iconbitmap(r"C:\Automacao_Amhptiss\Infra\Arquivos\Robo.ico")
         self.janela.resizable(width=False, height=False)

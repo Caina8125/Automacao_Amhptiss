@@ -2,7 +2,12 @@ import Infra.Repository.AutenticacaoRepository as AuthRepository
 import Domain.Service.AutenticacaoService as AutenticacaoService
 
 def Autenticar(login, senha, setor):
-    roules = AuthRepository.auth(login,senha)
+    content = AuthRepository.auth(login,senha)
+    roules = content['UsuarioToken']["Claims"]
+    token = content['AccessToken']
     verificaSetor = AutenticacaoService.validarSetor(roules, setor)
-    return verificaSetor
+    validacao = []
+    validacao.append(verificaSetor)
+    validacao.append(token)
+    return validacao
 

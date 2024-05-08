@@ -14,7 +14,7 @@ class Login:
         self.corJanela = corTema
         self.tela = janela
 
-        self.barra = customtkinter.CTkLabel(self.tela ,text="", fg_color="#274360",width=550,height=40)
+        self.barra = customtkinter.CTkLabel(self.tela ,text="", fg_color="#274360",width=650,height=40)
         self.barra.pack(padx=0, pady=0)
         
         self.photo = customtkinter.CTkImage(light_image = Image.open(r"C:\Automacao_Amhptiss\Infra\Arquivos\logo.png"), size=(80,90))
@@ -30,10 +30,10 @@ class Login:
         self.senha = customtkinter.CTkEntry(self.tela, width=180,placeholder_text="Sua senha do Amhptiss",placeholder_text_color="#274360",border_color="#274360" ,show="*")
         self.senha.pack(padx=10, pady=10)
 
-        self.comboBoxSetor = customtkinter.CTkComboBox(self.tela,border_color="#274360",button_color="#274360", button_hover_color="White",dropdown_fg_color="#274360", dropdown_text_color="White",text_color="#274360",values=["GLOSA","FATURAMENTO","FINANCEIRO","NOTA_FISCAL"], width=140)
+        self.comboBoxSetor = customtkinter.CTkComboBox(self.tela,border_color="#274360",button_color="#274360", button_hover_color="White",dropdown_fg_color="#274360", dropdown_text_color="White",text_color="#274360",values=["GLOSA","FATURAMENTO","FINANCEIRO","NOTA_FISCAL"], width=180)
         self.comboBoxSetor.pack(padx=10, pady=10)
         
-        self.botaoLogar = customtkinter.CTkButton(self.tela, fg_color="#274360",width=80,text="Login", command=lambda: threading.Thread(target=self.clique).start())
+        self.botaoLogar = customtkinter.CTkButton(self.tela, fg_color="#274360",width=130,text="Login", command=lambda: threading.Thread(target=self.clique).start())
         self.botaoLogar.pack(padx=5, pady=5)
 
     def modoEscuro(self):
@@ -44,6 +44,9 @@ class Login:
         else:
             self.corJanela = "light"
             customtkinter.set_appearance_mode(self.corJanela)
+
+    def ocultarBotaoDark(self):
+        self.botaoDark.pack_forget()
 
     def ocultarTelaLogin(self):
         self.login.pack_forget()
@@ -71,9 +74,10 @@ class Login:
         try:
             autenticacao = AuhtAppService.Autenticar(loginUsuario,senhaUsuario,setor)
 
-            if (autenticacao):
+            if (autenticacao[0]):
                 ImageLabel.ocultarGif(self)
-                TelaSelecioneAutomacoes(setor, self.tela)
+                self.ocultarBotaoDark()
+                TelaSelecioneAutomacoes(setor, self.tela,token=autenticacao[1])
             else:
                 tkinter.messagebox.showerror("Erro Autenticação", f"Usuário informado não tem permissão no setor {setor}")
                 self.reiniciarTelaLogin()

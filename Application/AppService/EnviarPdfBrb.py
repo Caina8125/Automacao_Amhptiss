@@ -199,7 +199,7 @@ class EnviarPdf(PageElement):
                         pass
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def enviar_pdf():
+def enviar_pdf(listaFaturas):
     global pasta, login_page
     login_usuario = 'lucas.paz'
     senha_usuario = 'RDRsoda90901@'
