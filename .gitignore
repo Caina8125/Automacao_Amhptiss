@@ -1,0 +1,4 @@
+.venv
+.venv-automacao
+requirements.txt
+**/__pycache__/
