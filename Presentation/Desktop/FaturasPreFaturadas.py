@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from Presentation.Desktop.Gif import ImageLabel
 import Application.AppService.FaturasPreFaturadasAppService as Faturas
 import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
+import Application.AppService.EnviarPdfBrb as EnviarBrb
 
 class telaTabelaFaturas:
     def __init__(self,janela,token,nomeAutomacao,codigoConvenio):
@@ -81,6 +82,18 @@ class telaTabelaFaturas:
         self.botaoBuscarFaturas = customtkinter.CTkButton(self.tela, width=80,text="Buscar Faturas Escaneadas ", command=lambda: threading.Thread(target=self.buscarFaturas()).start())
         # self.botaoBuscarFaturas.pack(padx=10, pady=10)
     
+    def iniciar(self):
+        self.ocultarTreeView()
+        ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Faturas Escaneadas no portal...")
+        faturasTela = self.obterFaturasTela()
+        EnviarBrb.enviar_pdf(faturasTela)
+
+    def obterFaturasTela(self):
+        self.faturas = []
+        for item in self.my_tree.get_children():
+            self.valores = self.my_tree.item(item, 'values')
+            self.faturas.append(self.valores)
+        return self.faturas
 
     def remover(self):
         itenSelecionado = self.my_tree.selection()
@@ -92,12 +105,8 @@ class telaTabelaFaturas:
 
     def buscarFaturas(self):
         self.ocultarTreeView()
-        self.faturas = []
-        for item in self.my_tree.get_children():
-            self.valores = self.my_tree.item(item, 'values')
-            self.faturas.append(self.valores)
-
-        listaCaminhoFaturas = ObterCaminho.IniciarBusca(self.faturas)
+        self.listaTela = self.obterFaturasTela()
+        listaCaminhoFaturas = ObterCaminho.IniciarBusca(self.listaTela)
         listaCaminhoFaturas.sort_values('Status Envio', ascending=False, inplace=True)
         df = listaCaminhoFaturas.values.tolist()
         self.reiniciarTreeView(listaAtualizada=df)
