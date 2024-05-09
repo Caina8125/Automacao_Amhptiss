@@ -16,7 +16,7 @@ class telaTabelaFaturas:
         self.tela = janela
         self.corJanela = "light"
 
-        self.photo = customtkinter.CTkImage(light_image = Image.open(r"C:\Automacao_Amhptiss\Infra\Arquivos\logo.png"), size=(60,70))
+        self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(60,70))
         self.botaoDark = customtkinter.CTkButton(self.tela,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
         self.botaoDark.pack()
         
