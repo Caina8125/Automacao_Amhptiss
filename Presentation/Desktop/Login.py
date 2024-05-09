@@ -17,7 +17,7 @@ class Login:
         self.barra = customtkinter.CTkLabel(self.tela ,text="", fg_color="#274360",width=650,height=40)
         self.barra.pack(padx=0, pady=0)
         
-        self.photo = customtkinter.CTkImage(light_image = Image.open(r"C:\Automacao_Amhptiss\Infra\Arquivos\logo.png"), size=(80,90))
+        self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(80,90))
         self.botaoDark = customtkinter.CTkButton(self.tela,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
         self.botaoDark.pack()
 
