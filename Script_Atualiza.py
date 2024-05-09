@@ -17,7 +17,7 @@ class Atualiza:
     def ObterPathAtualiza(self):
         self.pastaAtualiza = self.config['ConfigPath']['PathAtualizaIni']
         return self.pastaAtualiza
-    
+     
     def ObterPathLocal(self):
         self.pastaLocal = self.config['ConfigPath']['PathLocalIni']
         return self.pastaLocal
