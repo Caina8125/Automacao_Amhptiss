@@ -30,7 +30,7 @@ class Login:
         self.senha = customtkinter.CTkEntry(self.tela, width=180,placeholder_text="Sua senha do Amhptiss",placeholder_text_color="#274360",border_color="#274360" ,show="*")
         self.senha.pack(padx=10, pady=10)
 
-        self.comboBoxSetor = customtkinter.CTkComboBox(self.tela,border_color="#274360",button_color="#274360", button_hover_color="White",dropdown_fg_color="#274360", dropdown_text_color="White",text_color="#274360",values=["GLOSA","FATURAMENTO","FINANCEIRO","NOTA_FISCAL"], width=180)
+        self.comboBoxSetor = customtkinter.CTkComboBox(self.tela,border_color="#274360",button_color="#274360", button_hover_color="White",dropdown_fg_color="#274360", dropdown_text_color="White",text_color="#274360",values=["Glosa","Faturamento","Financeiro","Nota_Fiscal"], width=180)
         self.comboBoxSetor.pack(padx=10, pady=10)
         
         self.botaoLogar = customtkinter.CTkButton(self.tela, fg_color="#274360",width=130,text="Login", command=lambda: threading.Thread(target=self.clique).start())

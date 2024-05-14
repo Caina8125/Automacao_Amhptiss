@@ -34,6 +34,9 @@ class telaTabelaFaturas:
 
     def treeView(self, listas):
         
+        self.qtd = len(listas) 
+        self.texto = customtkinter.CTkLabel(self.tela, text=f"{self.qtd} Faturas Pré-Faturadas", text_color="#274360",font=("Arial",20))
+        self.texto.pack(padx=3, pady=3)
 
         self.style = ttk.Style()
         self.style.configure("Treeview",
@@ -44,12 +47,15 @@ class telaTabelaFaturas:
         self.style.map('Treeview',
                 background=[('selected','gray')],
                 foreground=[('selected','black')])
-        
-        self.qtd = len(listas) 
-        self.texto = customtkinter.CTkLabel(self.tela, text=f"{self.qtd} Faturas Pré-Faturadas", text_color="#274360",font=("Arial",20))
-        self.texto.pack(padx=3, pady=3)
+
+        # self.treeScrool = Scrollbar(self.tela)
+        # self.treeScrool.pack(side=RIGHT,fill=Y)
+
+        # self.my_tree = ttk.Treeview(self.tela, yscrollcommand=self.treeScrool.set)
 
         self.my_tree = ttk.Treeview(self.tela)
+
+        # self.treeScrool.config(command=self.my_tree.yview)
 
         self.my_tree['columns'] = ("Faturas","Remessas","Convenio","Usuario","Status","Arquivo")
 
@@ -84,9 +90,16 @@ class telaTabelaFaturas:
     
     def iniciar(self):
         self.ocultarTreeView()
-        ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Faturas Escaneadas no portal...")
+        self.botaoRoboPaz()
+        ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
         faturasTela = self.obterFaturasTela()
+        # self.ocultarBotoes()
         EnviarBrb.enviar_pdf(faturasTela)
+
+    def botaoRoboPaz(self):
+        self.photoPaz = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\RoboEnvia.png"), size=(100,100))
+        self.botaoDark2 = customtkinter.CTkButton(self.tela,text="",image=self.photoPaz, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
+        self.botaoDark2.pack()
 
     def obterFaturasTela(self):
         self.faturas = []
@@ -113,16 +126,25 @@ class telaTabelaFaturas:
 
     def reiniciarTreeView(self,listaAtualizada):
         # self.botaoRemoverFaturasEnviadas.place(x=318, y=420)
+        self.botaoDark.pack()
         self.botaoStart.place(x=220, y=420)
         self.botaoRemover.place(x=330, y=420)
         self.treeView(listaAtualizada)
 
     def ocultarTreeView(self):
-        self.texto.pack_forget()
-        self.my_tree.pack_forget()
         self.botaoStart.place_forget()
         self.botaoRemover.place_forget()
+        self.botaoDark.pack_forget()
+        self.texto.pack_forget()
+        self.my_tree.pack_forget()
         self.botaoBuscarFaturas.pack_forget()
+
+    def ocultarBotoes(self):
+        self.botaoStart.destroy()
+        self.botaoRemover.destroy()
+    
+    def ocultarBotaoDark(self):
+        self.botaoDark.pack_forget()
 
     def modoEscuro(self):
         if (self.corJanela == "light"):

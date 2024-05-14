@@ -3,15 +3,15 @@ import Infra.Repository.ListaAutomacaoRepository as listaAutomacao
 
 def aplicarValidacaoUsuarioSetor(setor):
     match setor:
-        case "FATURAMENTO":
+        case "Faturamento":
             lista = listaAutomacao.obterListaFaturamento()
             return lista
-        case "GLOSA":
+        case "Glosa":
             lista = listaAutomacao.obterListaGlosa()
             return lista
-        case "FINANCEIRO":
+        case "Financeiro":
             lista = listaAutomacao.obterListaFinanceiro()
             return lista
-        case "NOTA_FISCAL":
+        case "Nota_Fiscal":
             lista = listaAutomacao.obterListaTesouraria()
             return lista
