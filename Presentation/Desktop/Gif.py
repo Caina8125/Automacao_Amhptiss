@@ -2,6 +2,7 @@ import customtkinter
 from tkinter import *
 from itertools import count, cycle
 from PIL import Image, ImageTk
+import asyncio
 
 class ImageLabel(customtkinter.CTkLabel):
    
@@ -49,3 +50,13 @@ class ImageLabel(customtkinter.CTkLabel):
         # self.unload(self)
         self.info.pack_forget()
         self.lbl.pack_forget()
+
+    def reiniciarGif(self):
+        self.info.pack(padx=10, pady=10)
+        self.lbl.pack(padx=10, pady=10)
+
+    def fecharGif(self):
+        self.info.destroy()
+        self.lbl.destroy()
+    
+    

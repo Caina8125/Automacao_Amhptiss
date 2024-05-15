@@ -12,8 +12,10 @@ import Application.AppService.EnviarPdfBrb as EnviarBrb
 
 class telaTabelaFaturas:
     def __init__(self,janela,token,nomeAutomacao,codigoConvenio):
-
         self.tela = janela
+        
+
+        self.codigoConvenio = codigoConvenio
         self.corJanela = "light"
 
         self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(60,70))
@@ -23,6 +25,7 @@ class telaTabelaFaturas:
         self.listas = Faturas.obterListaFaturas("normal",codigoConvenio,400,"2023/01/01","2024/05/30",token)
         self.treeView(listas=self.listas)
         self.botaoBuscarFaturas.pack(padx=10, pady=10)
+        
         
     def sort_treeview(self,tree, col, reverse):
         # Função para ordenar a treeview com base no cabeçalho clicado
@@ -47,18 +50,9 @@ class telaTabelaFaturas:
         self.style.map('Treeview',
                 background=[('selected','gray')],
                 foreground=[('selected','black')])
-
-        # self.treeScrool = Scrollbar(self.tela)
-        # self.treeScrool.pack(side=RIGHT,fill=Y)
-
-        # self.my_tree = ttk.Treeview(self.tela, yscrollcommand=self.treeScrool.set)
-
+        
         self.my_tree = ttk.Treeview(self.tela)
-
-        # self.treeScrool.config(command=self.my_tree.yview)
-
         self.my_tree['columns'] = ("Faturas","Remessas","Convenio","Usuario","Status","Arquivo")
-
         self.my_tree.column("#0",width=0, stretch=NO)
         self.my_tree.column("Faturas", anchor=CENTER, width=70)
         self.my_tree.column("Remessas",anchor=CENTER, width=70)
@@ -92,8 +86,7 @@ class telaTabelaFaturas:
         self.ocultarTreeView()
         self.botaoRoboPaz()
         ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
-        faturasTela = self.obterFaturasTela()
-        # self.ocultarBotoes()
+        faturasTela = self.obterFaturasEncontradas()
         EnviarBrb.enviar_pdf(faturasTela)
 
     def botaoRoboPaz(self):
@@ -108,6 +101,16 @@ class telaTabelaFaturas:
             self.faturas.append(self.valores)
         return self.faturas
 
+    def obterFaturasEncontradas(self):
+        self.faturas = []
+        for item in self.my_tree.get_children():
+            self.valores = self.my_tree.item(item, 'values')
+            self.status = self.valores[5]
+            if self.status == "Não Encontrado":
+                self.faturas.append(self.valores)
+
+        return self.faturas
+
     def remover(self):
         itenSelecionado = self.my_tree.selection()
         try:
@@ -119,7 +122,7 @@ class telaTabelaFaturas:
     def buscarFaturas(self):
         self.ocultarTreeView()
         self.listaTela = self.obterFaturasTela()
-        listaCaminhoFaturas = ObterCaminho.IniciarBusca(self.listaTela)
+        listaCaminhoFaturas = ObterCaminho.IniciarBusca(self.listaTela, self.codigoConvenio)
         listaCaminhoFaturas.sort_values('Status Envio', ascending=False, inplace=True)
         df = listaCaminhoFaturas.values.tolist()
         self.reiniciarTreeView(listaAtualizada=df)

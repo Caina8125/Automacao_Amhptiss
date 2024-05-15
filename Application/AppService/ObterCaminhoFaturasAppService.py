@@ -14,16 +14,23 @@ def ObterCaminhosFaturaRobo(dataFrame):
     if not faturasRobo.empty:
         pass
 
-def ObterCaminhosFaturaUsuario(dataFrame):
+def ObterCaminhosFaturaUsuario(dataFrame,codigoConvenio):
     faturasUsuario = dataFrame.loc[(dataFrame["Usuario"] != "root")]
     if not faturasUsuario.empty:
-        return GuiasEscaneadas.GuiasEscaneadasBrb(faturasUsuario)
+        match codigoConvenio:
+            case 10:
+                caminho = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"")
+            case 433:
+                caminho = r"\\10.0.0.239\guiasscaneadas\2024\GDF"
+                variavelFatura = "LOTE "
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,variavelFatura)
         
 
-def IniciarBusca(lista):
+def IniciarBusca(lista,codigoConvenio):
     df = TrasformarDataFrame(lista)
-    # robo = ObterCaminhosFaturaRobo(df)
-    usuario = ObterCaminhosFaturaUsuario(df)
+    # robo = ObterCaminhosFaturaRobo(df)ks
+    usuario = ObterCaminhosFaturaUsuario(df,codigoConvenio)
     return usuario
 
   

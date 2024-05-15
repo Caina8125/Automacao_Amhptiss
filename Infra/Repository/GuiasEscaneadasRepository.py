@@ -6,16 +6,15 @@ import pandas as pd
 #     pathEcaneadasBrb = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
 #     import os
 
-def GuiasEscaneadasBrb(listas):
-    nome_pasta = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
+def BuscarGuiasEscaneadas(listas,caminho,variavel):
+    nome_pasta = caminho
 
     caminhoFaturas = []
     statusBusca = []
     arquivo = []
 
     for index, linha in listas.iterrows():
-
-        arquivoFatura = linha["Fatura"] + '.pdf'
+        arquivoFatura = variavel+linha["Fatura"]+'.pdf'
 
         # Verifica se a pasta existe
         if not os.path.isdir(nome_pasta):

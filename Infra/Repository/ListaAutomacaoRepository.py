@@ -4,6 +4,7 @@ def obterListaFaturamento():
                             "Faturamento - Conferência Bacen",
                             "Faturamento - Enviar PDF Bacen",
                             "Faturamento - Enviar PDF BRB",
+                            "Faturamento - Enviar PDF GDF",
                             "Faturamento - Enviar XML Bacen",
                             "Faturamento - Verificar Situação BRB",
                             "Faturamento - Verificar Situação Fascal",
