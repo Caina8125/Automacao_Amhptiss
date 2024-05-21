@@ -19,7 +19,6 @@ class PageElement(ABC):
         self.driver.get(self.url)
 
 class Login(PageElement):
-    prestador_pj = (By.XPATH, '//*[@id="tipoAcesso"]/option[9]')
     usuario = (By.XPATH, '//*[@id="login-entry"]')
     senha = (By.XPATH, '//*[@id="password-entry"]')
     entrar = (By.XPATH, '//*[@id="BtnEntrar"]')

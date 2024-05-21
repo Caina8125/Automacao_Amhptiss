@@ -13,6 +13,9 @@ import Application.AppService.EnviarPdfBrb as EnviarBrb
 class telaTabelaFaturas:
     def __init__(self,janela,token,nomeAutomacao,codigoConvenio):
         self.tela = janela
+        minha_thread = threading.Thread(target=ImageLabel.iniciarGif(self,janela=self.tela,texto="Buscando faturas no \nAMHPTISS..."))
+        minha_thread.start()
+        minha_thread.join()
         
 
         self.codigoConvenio = codigoConvenio

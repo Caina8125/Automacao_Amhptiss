@@ -1,5 +1,6 @@
 import customtkinter
 from Presentation.Desktop.Login import Login
+from Presentation.Desktop.TesteAwait import chamada_assincrona
 
 class Aplication:
     def __init__(self):
@@ -12,6 +13,7 @@ class Aplication:
         # self.janela.resizable(width=False, height=False)
         self.janela.eval('tk::PlaceWindow . center')
         Login(self.janela, self.corAtual)
+        # chamada_assincrona(self)
 
     def modoEscuro(self):
         if (self.corAtual == "light"):

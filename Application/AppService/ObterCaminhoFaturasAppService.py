@@ -24,7 +24,7 @@ def ObterCaminhosFaturaUsuario(dataFrame,codigoConvenio):
             case 433:
                 caminho = r"\\10.0.0.239\guiasscaneadas\2024\GDF"
                 variavelFatura = "LOTE "
-                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,variavelFatura)
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"")
         
 
 def IniciarBusca(lista,codigoConvenio):
