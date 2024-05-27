@@ -10,26 +10,36 @@ import Application.AppService.FaturasPreFaturadasAppService as Faturas
 import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
 import Application.AppService.EnviarPdfBrb as EnviarBrb
 
-class telaTabelaFaturas:
-    def __init__(self,janela,token,nomeAutomacao,codigoConvenio):
+class telaTabelaFaturas():
+    def __init__(self, janela,token,nomeAutomacao,codigoConvenio):
+        super().__init__()
         self.tela = janela
-        minha_thread = threading.Thread(target=ImageLabel.iniciarGif(self,janela=self.tela,texto="Buscando faturas no \nAMHPTISS..."))
-        minha_thread.start()
-        minha_thread.join()
+        self.exibirBotaoDark()
+        ImageLabel.iniciarGif(self,janela=self.tela,texto="Buscando faturas no \nAMHPTISS...")
         
-
         self.codigoConvenio = codigoConvenio
+        self.token = token
         self.corJanela = "light"
 
-        self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(60,70))
-        self.botaoDark = customtkinter.CTkButton(self.tela,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
-        self.botaoDark.pack()
+        threading.Thread(target=self.pegar_dados).start()
         
-        self.listas = Faturas.obterListaFaturas("normal",codigoConvenio,400,"2023/01/01","2024/05/30",token)
+    def pegar_dados(self):
+        self.listas = Faturas.obterListaFaturas("normal",self.codigoConvenio,400,"2023/01/01","2024/05/30",self.token)
+        print(self.listas)
+        self.show_data()
+        # self.after(0, self.show_data, self.listas)
+
+    def show_data(self):
+        ImageLabel.ocultarGif(self)
+        self.ocultarBotaoDark()
+
+        self.exibirBotaoDark()
         self.treeView(listas=self.listas)
         self.botaoBuscarFaturas.pack(padx=10, pady=10)
         
-        
+        # Fecha a tela de carregamento após mostrar os dados por um tempo
+        # self.after(0, self.destroy)
+
     def sort_treeview(self,tree, col, reverse):
         # Função para ordenar a treeview com base no cabeçalho clicado
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
@@ -160,3 +170,8 @@ class telaTabelaFaturas:
         else:
             self.corJanela = "light"
             customtkinter.set_appearance_mode(self.corJanela)
+
+    def exibirBotaoDark(self):
+        self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(60,70))
+        self.botaoDark = customtkinter.CTkButton(self.tela,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
+        self.botaoDark.pack()

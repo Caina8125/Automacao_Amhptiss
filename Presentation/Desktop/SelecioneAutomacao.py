@@ -61,12 +61,12 @@ class TelaSelecioneAutomacoes:
 
         match automacaoSelecionada:
             case "Faturamento - Enviar PDF BRB":
-                convenio = 10
+                telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=10)
                 
             case "Faturamento - Enviar PDF GDF":
-                convenio = 433
+                telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=433)
             
-        telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=convenio)
+        
 
     def bottonSair(self):
         self.botaoSair = customtkinter.CTkButton(self.tela,text="Sair", text_color="Red",fg_color="transparent",bg_color="transparent",width=80,command=lambda: threading.Thread(target=self.logOf()).start())
