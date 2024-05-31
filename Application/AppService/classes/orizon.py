@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Orizon(PageElement):
     data_atual = date.today()

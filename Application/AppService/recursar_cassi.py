@@ -12,7 +12,7 @@ from seleniumwire import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import Pidgin
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     usuario = (By.XPATH, '//*[@id="cpfOuCnpj"]')

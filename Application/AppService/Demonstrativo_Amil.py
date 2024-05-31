@@ -8,10 +8,10 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import tkinter
-import Pidgin
+from Application.AppService.Pidgin import financeiroDemo
 import tkinter.messagebox
 import json
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     fechar = (By.ID, 'finalizar-walktour')
@@ -175,5 +175,5 @@ def demonstrativo_amil(user, password):
 
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        Pidgin.financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
+        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
         driver.quit()

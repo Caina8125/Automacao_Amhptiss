@@ -5,7 +5,7 @@ from Presentation.Desktop.Gif import ImageLabel
 import Application.AppService.ChamarTabelaAppService as Tabela
 import Application.AppService.ObterAutomacaoSetorAppService as AutomacoesAppService
 from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
-from Application import *
+from Application import AppService
 import time
 
 from Presentation.Desktop.SelecionarPasta import TelaSelecionarPasta
@@ -64,7 +64,7 @@ class TelaSelecioneAutomacoes:
 
         match automacaoSelecionada:
             case "Faturamento - Anexar Guia Geap":
-                TelaSelecionarPasta(self.tela)
+                TelaSelecionarPasta(self.tela, AppService.AnexarGuiaGeap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'))
 
             case "Faturamento - Conferência de Protocolos":
                 ...

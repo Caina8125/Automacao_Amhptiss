@@ -3,7 +3,7 @@ from time import sleep
 from tkinter.messagebox import showerror, showinfo, showwarning
 import pandas as pd
 from seleniumwire.webdriver import Chrome
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 from selenium.webdriver.common.by import By
 
 class Benner(PageElement):

@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import tkinter
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     multiusuario = (By.XPATH, '/html/body/div[3]/div[3]/div/form/div[1]/label')

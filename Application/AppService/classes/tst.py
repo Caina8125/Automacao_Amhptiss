@@ -15,8 +15,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
-from Pidgin import financeiroDemo
-from page_element import PageElement
+from Application.AppService.Pidgin import financeiroDemo
+from Application.AppService.page_element import PageElement
 
 class Tst(PageElement):
     input_usuario = (By.XPATH, '/html/body/div[2]/div[2]/form/table/tbody/tr[2]/td[2]/input')

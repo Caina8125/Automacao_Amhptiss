@@ -1,7 +1,7 @@
 from time import sleep
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 
 class BuscarProtocolo(PageElement):

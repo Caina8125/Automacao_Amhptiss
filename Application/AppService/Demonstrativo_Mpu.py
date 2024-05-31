@@ -10,8 +10,8 @@ import time
 import datetime
 import os
 import tkinter
-import Pidgin
-from page_element import PageElement
+from Application.AppService.Pidgin import financeiroDemo
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     usuario = (By.XPATH, '//*[@id="rp1_edt"]/table/tbody/tr[2]/td/form/table/tbody/tr[1]/td[2]/input')
@@ -197,5 +197,5 @@ def demonstrativo_mpu(user, password):
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        Pidgin.financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
+        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
     driver.quit()

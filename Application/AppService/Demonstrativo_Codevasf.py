@@ -10,8 +10,8 @@ import time
 import os
 import tkinter
 import json
-import Pidgin
-from page_element import PageElement
+from Application.AppService.Pidgin import financeiroDemo
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     prestador = (By.XPATH, '/html/body/div[1]/div[10]/div[1]/ul/li[2]/ul/li[2]/h2')
@@ -229,4 +229,4 @@ def demonstrativo_codevasf(user, password):
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        Pidgin.financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
+        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")

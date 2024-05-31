@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from tkinter.filedialog import askdirectory
 from bacen_protocolo import BuscarProtocolo
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 from abc import ABC
 import pandas as pd
 from seleniumwire import webdriver

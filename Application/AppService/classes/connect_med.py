@@ -15,7 +15,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import requests
 from tkinter.messagebox import showerror, showinfo
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class ConnectMed(PageElement):
     data_atual = date.today()

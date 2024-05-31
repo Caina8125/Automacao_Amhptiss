@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from Filtro_Faturamento import *
 from selenium.webdriver.chrome.options import Options
 from seleniumwire import webdriver
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     usuario = (By.XPATH, '//*[@id="username"]')

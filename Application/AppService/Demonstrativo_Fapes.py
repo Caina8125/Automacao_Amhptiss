@@ -1,7 +1,6 @@
 import os
 import time
 import shutil
-import Pidgin
 import tkinter
 import pandas as pd
 import tkinter.messagebox
@@ -12,7 +11,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from page_element import PageElement
+from Application.AppService.Pidgin import financeiroDemo
+from Application.AppService.page_element import PageElement
 
 
 class Login(PageElement):
@@ -44,7 +44,7 @@ class BaixarDemonstrativoFapes(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.analise_conta).click()
         time.sleep(2)
-        caminho(driver, url).Alert()
+        BaixarDemonstrativoFapes(driver, url).Alert()
         self.driver.find_element(*self.selecionar_convenio).click()
         time.sleep(1)
         self.driver.find_element(*self.opcao_fapes).click()
@@ -211,17 +211,17 @@ def demonstrativo_fapes(user, password):
         )
 
         print('Pegar Alerta Acionado!')
-        caminho(driver, url).Alert()
+        BaixarDemonstrativoFapes(driver, url).Alert()
 
         
-        caminho(driver, url).exe_caminho()
+        BaixarDemonstrativoFapes(driver, url).exe_caminho()
 
-        caminho(driver, url).buscar_demonstrativo()
+        BaixarDemonstrativoFapes(driver, url).buscar_demonstrativo()
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        Pidgin.financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
+        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
     driver.quit()

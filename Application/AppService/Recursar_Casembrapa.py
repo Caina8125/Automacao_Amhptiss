@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     usuario = (By.XPATH, '//*[@id="username"]')

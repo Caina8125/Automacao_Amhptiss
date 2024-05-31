@@ -14,7 +14,7 @@ from selenium.webdriver.chrome.service import Service
 import os
 import zipfile
 from bacen_protocolo import BuscarProtocolo
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class BacenMapa(PageElement):
     usuario_input = (By.XPATH, '/html/body/table/tbody/tr/td/div/div/div/div/div/div/div/div/div/div/div[2]/table/tbody/tr[2]/td/form/table/tbody/tr[1]/td[2]/input')

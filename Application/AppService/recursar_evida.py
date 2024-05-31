@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 import tkinter.messagebox
 import tkinter
 import os
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     prestador_pf = (By.XPATH, '//*[@id="tipoAcesso"]/option[6]')

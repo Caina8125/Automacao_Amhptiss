@@ -8,7 +8,7 @@ from selenium import webdriver
 from tkinter import filedialog
 from openpyxl import load_workbook
 from selenium.webdriver.common.by import By
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 
 class Login(PageElement):

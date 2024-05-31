@@ -12,7 +12,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from seleniumwire import webdriver
 import tkinter
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 
 class Login(PageElement):

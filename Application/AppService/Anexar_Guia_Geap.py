@@ -2,7 +2,7 @@ import pandas as pd
 from selenium.webdriver.common.by import By
 from openpyxl import load_workbook
 import time
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
     
 class AnexarGuiaGeap(PageElement):
     acessar_portal = (By.XPATH, '/html/body/div[3]/div[3]/div[1]/form/div[1]/div[1]/div/a')
@@ -34,9 +34,8 @@ class AnexarGuiaGeap(PageElement):
     sair = (By.XPATH, '/html/body/div[3]/div/div[3]/div[2]/div')
     confirmar = (By.XPATH, '/html/body/div[1]/div[2]/div/div/ui-panel/div[2]/button/div[2]/div/div')
 
-    def __init__(self, planilha, url, cpf, senha):
+    def __init__(self, url, cpf, senha):
         super.__init__()
-        self.planilha = planilha
         self.url = url
         self.cpf = cpf
         self.senha = senha
@@ -79,14 +78,14 @@ class AnexarGuiaGeap(PageElement):
         # driver.switch_to.window(driver.window_handles[1])
         self.driver.switch_to.window(self.driver.window_handles[-1])
     
-    def injetar_guia(self):
+    def inicia_automacao(self, planilha):
         self.open()
         self.exe_login()
         self.exe_caminho()
         for _ in range(0,10):
             try:
                 count = 0
-                faturas_df = pd.read_excel(self.planilha)
+                faturas_df = pd.read_excel(planilha)
                 numero_envio_anterior = ''
 
                 for index, linha in faturas_df.iterrows():
@@ -155,8 +154,8 @@ class AnexarGuiaGeap(PageElement):
                     if 'Essa Guia está com erro, não será possível anexar arquivo.' in content:
                         dados = ['Guia com erro']
                         df = pd.DataFrame(dados)
-                        book = load_workbook(self.planilha)
-                        writer = pd.ExcelWriter(self.planilha, engine='openpyxl')
+                        book = load_workbook(planilha)
+                        writer = pd.ExcelWriter(planilha, engine='openpyxl')
                         writer.book = book
                         writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
                         df.to_excel(writer, 'Planilha1', startrow= count, startcol=4, header=False, index=False)
@@ -176,8 +175,8 @@ class AnexarGuiaGeap(PageElement):
                         print('Erro ao anexar guia')
                         dados = ['Não Anexado']
                         df = pd.DataFrame(dados)
-                        book = load_workbook(self.planilha)
-                        writer = pd.ExcelWriter(self.planilha, engine='openpyxl')
+                        book = load_workbook(planilha)
+                        writer = pd.ExcelWriter(planilha, engine='openpyxl')
                         writer.book = book
                         writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
                         df.to_excel(writer, 'Planilha1', startrow= count, startcol=4, header=False, index=False)
@@ -191,8 +190,8 @@ class AnexarGuiaGeap(PageElement):
                         print('Guia Anexada')                                                                   
                         dados = ['Sim']
                         df = pd.DataFrame(dados)
-                        book = load_workbook(self.planilha)
-                        writer = pd.ExcelWriter(self.planilha, engine='openpyxl')
+                        book = load_workbook(planilha)
+                        writer = pd.ExcelWriter(planilha, engine='openpyxl')
                         writer.book = book
                         writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
                         df.to_excel(writer, 'Planilha1', startrow= count, startcol=4, header=False, index=False)
@@ -202,8 +201,8 @@ class AnexarGuiaGeap(PageElement):
                         print('Erro ao anexar guia')
                         dados = ['Cancelado']
                         df = pd.DataFrame(dados)
-                        book = load_workbook(self.planilha)
-                        writer = pd.ExcelWriter(self.planilha, engine='openpyxl')
+                        book = load_workbook(planilha)
+                        writer = pd.ExcelWriter(planilha, engine='openpyxl')
                         writer.book = book
                         writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
                         df.to_excel(writer, 'Planilha1', startrow= count, startcol=4, header=False, index=False)

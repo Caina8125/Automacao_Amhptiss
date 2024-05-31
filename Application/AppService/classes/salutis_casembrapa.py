@@ -12,7 +12,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from typing import Any
 import time
 from os import listdir, rename
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 from tkinter.messagebox import showerror, showinfo
 
 class SalutisCasembrapa(PageElement):

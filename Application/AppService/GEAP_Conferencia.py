@@ -10,7 +10,7 @@ from openpyxl import load_workbook
 import pandas as pd
 import time
 import os
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     acessar_portal = (By.XPATH, '/html/body/div[3]/div[3]/div[1]/form/div[1]/div[1]/div/a')

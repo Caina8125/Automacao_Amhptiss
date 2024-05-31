@@ -10,7 +10,7 @@ from Presentation.Desktop.Gif import ImageLabel
 import Application.AppService as service
 
 class TelaSelecionarPasta:
-    def __init__(self, janela, funcao):
+    def __init__(self, janela, obj):
         super().__init__()
         self.tela = janela
 
@@ -37,7 +37,7 @@ class TelaSelecionarPasta:
         self.btnSelecionarDiretorio = customtkinter.CTkButton(self.terceiroContainer, text="...", width=30, height=28, fg_color="#274360", command=self.selecionarDiretorio)
         self.btnSelecionarDiretorio.pack(side=LEFT, padx=1)
         
-        self.iniciar = customtkinter.CTkButton(self.quartoContainer, width=80,fg_color="#274360",text="Iniciar", command=lambda: threading.Thread(target=self.iniciar_automacao(funcao)).start())
+        self.iniciar = customtkinter.CTkButton(self.quartoContainer, width=80,fg_color="#274360",text="Iniciar", command=lambda: threading.Thread(target=self.iniciar_automacao(obj)).start())
         self.iniciar.pack(pady=0, padx=0)
 
     def modoEscuroAut(self):
@@ -53,8 +53,9 @@ class TelaSelecionarPasta:
             self.diretorioInput.insert(0, folder_path)
             self.diretorioInput.configure(state='readonly')
 
-    def iniciar_automacao(self, funcao):
+    def iniciar_automacao(self, obj):
         diretorio = self.diretorioInput.get()
+        obj.inicia_automacao(diretorio)
 
         self.ocultar_widgets()
 

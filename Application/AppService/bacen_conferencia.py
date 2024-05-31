@@ -12,7 +12,7 @@ from seleniumwire import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from tkinter import messagebox
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class LoginLayoutAntigo(PageElement):
     usuario_input = (By.XPATH, '/html/body/table/tbody/tr/td/div/div/div/div/div/div/div/div/div/div/div[2]/table/tbody/tr[2]/td/form/table/tbody/tr[1]/td[2]/input')

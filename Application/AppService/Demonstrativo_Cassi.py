@@ -10,9 +10,9 @@ from seleniumwire import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from datetime import datetime
-import Pidgin
 from xml.dom import minidom
-from page_element import PageElement
+from Application.AppService.Pidgin import financeiroDemo
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     usuario = (By.XPATH, '//*[@id="cpfOuCnpj"]')
@@ -192,4 +192,4 @@ def demonstrativo_cassi(data_inicial, data_final, user, password):
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        Pidgin.financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
+        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")

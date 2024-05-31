@@ -13,7 +13,7 @@ from Filtro_Faturamento_Simples import *
 from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options
 import tkinter
-from page_element import PageElement
+from Application.AppService.page_element import PageElement
 
 class Login(PageElement):
     prestador_pj = (By.XPATH, '//*[@id="tipoAcesso"]/option[7]')
