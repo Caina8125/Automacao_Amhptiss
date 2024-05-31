@@ -35,7 +35,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.demonstrativo_de_glosa).click()
         time.sleep(2)
 
-class BaixarDemonstrativos(PageElement):
+class BaixarDemonstrativosSis(PageElement):
     numero_do_protocolo = (By.XPATH, '//*[@id="ctl00_Main_DefaultDataInputForm_PageControl_GERAL_GERAL_NUMERODOPROTOCOLO"]')
     botao_ok = (By.XPATH, '//*[@id="ctl00_Main_DefaultDataInputForm_toolbar"]/a[1]')
     imprimir = (By.XPATH, '//*[@id="Print"]/table/tbody/tr/td[2]')
@@ -232,7 +232,7 @@ def demonstrativo_sis(user, password):
             senha = "Amhpbrasil2024*"
         )
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativos(driver, url).baixar_demonstrativos(planilha)
+        BaixarDemonstrativosSis(driver, url).baixar_demonstrativos(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

@@ -24,7 +24,7 @@ class Login(PageElement):
         self.driver.find_element(*self.senha).send_keys(senha)
         self.driver.find_element(*self.logar).click()
 
-class caminho(PageElement):
+class BaixarDemonstrativosTJDFT(PageElement):
     demonstrativo = (By.XPATH, '//*[@id="sidebar-menu"]/li[18]/a')
     analise_conta = (By.XPATH, '//*[@id="sidebar-menu"]/li[18]/ul/li[3]/a')
     selecionar_convenio = (By.XPATH, '//*[@id="s2id_OperadorasCredenciadas_HandleOperadoraSelected"]/a/span[2]/b')
@@ -42,7 +42,7 @@ class caminho(PageElement):
         # time.sleep(1)
         # self.driver.find_element(*self.analise_conta).click()
         time.sleep(2)
-        caminho(driver, url).Alert()
+        BaixarDemonstrativosTJDFT(driver, url).Alert()
         self.driver.find_element(*self.selecionar_convenio).click()
         time.sleep(1)
         self.driver.find_element(*self.opcao_pro_saude).click()
@@ -188,12 +188,12 @@ def demonstrativo_tjdft(user, password):
         )
 
         print('Pegar Alerta Acionado!')
-        caminho(driver, url).Alert()
+        BaixarDemonstrativosTJDFT(driver, url).Alert()
 
         
-        caminho(driver, url).exe_caminho()
+        BaixarDemonstrativosTJDFT(driver, url).exe_caminho()
 
-        caminho(driver, url).buscar_demonstrativo()
+        BaixarDemonstrativosTJDFT(driver, url).buscar_demonstrativo()
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

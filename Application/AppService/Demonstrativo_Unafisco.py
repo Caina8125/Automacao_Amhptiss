@@ -51,7 +51,7 @@ class Caminho(PageElement):
         # time.sleep(2)
         self.driver.get("https://novowebplanunafisco.facilinformatica.com.br/GuiasTISS/Relatorios/ViewRelatorioServicos")
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoUnafisco(PageElement):
     lote = (By.XPATH, '//*[@id="txtLote"]')
     pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
     ver_xml = (By.XPATH, '//*[@id="div-Servicos"]/div[1]/div[4]/div/div/div[1]/div/div[2]/a[2]')
@@ -198,7 +198,7 @@ def demonstrativo_unafisco(user, password):
 
         caminho = Caminho(driver, url)
         caminho.exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoUnafisco(driver, url).baixar_demonstrativo(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

@@ -26,7 +26,7 @@ class Login(PageElement):
         self.driver.find_element(*self.senha).send_keys(senha)
         self.driver.find_element(*self.logar).click()
 
-class caminho(PageElement):
+class BaixarDemonstrativoFapes(PageElement):
     demonstrativo        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/a/span[1]')
     analise_conta        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/ul/li[3]/a/span')
     selecionar_convenio  = (By.XPATH, '//*[@id="s2id_OperadorasCredenciadas_HandleOperadoraSelected"]/a/span[2]/b')

@@ -37,7 +37,7 @@ class Caminho(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.demonstrativo_de_glosas).click()
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoMpu(PageElement):
     competencia = (By.XPATH, '//*[@id="FormMain"]/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input[1]')
     filiais = (By.XPATH, '//*[@id="FormMain"]/table/tbody/tr[1]/td[4]/table/tbody/tr/td[1]/input[1]')
     peg = (By.XPATH, '//*[@id="FormMain"]/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/input[1]')
@@ -190,7 +190,7 @@ def demonstrativo_mpu(user, password):
         login_page.open()
         login_page.exe_login(usuario, senha)
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoMpu(driver, url).baixar_demonstrativo(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

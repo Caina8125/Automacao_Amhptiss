@@ -36,7 +36,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.demonst_analise_de_conta).click()
         time.sleep(2)
 
-class BaixarDemonstrativos(PageElement):
+class BaixarDemonstrativosCaixa(PageElement):
     numero_do_protocolo = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_PageControl_GERAL_GERAL_NUMEROPROTOCOLO"]')
     emitir_relatorio = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_toolbar"]/a[1]')
     mensagem = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_MsgUser_message"]')
@@ -217,7 +217,7 @@ def demonstrativo_caixa(user, password):
             senha = "!Saude2024"
         )
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativos(driver, url).baixar_demonstrativos(planilha)
+        BaixarDemonstrativosCaixa(driver, url).baixar_demonstrativos(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

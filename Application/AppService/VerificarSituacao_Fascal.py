@@ -43,7 +43,7 @@ class Caminho(PageElement):
         time.sleep(5)
     
     
-class injetar_dados(PageElement):
+class injetar_dados_fascal(PageElement):
     guia_op = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/input') 
     buscar = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/span/span')
     
@@ -148,7 +148,7 @@ def verificacao_fascal(user, password):
 
         Caminho(driver,url).exe_caminho()
 
-        injetar_dados(driver,url).inserir_dados()
+        injetar_dados_fascal(driver,url).inserir_dados()
 
         print("Todas as guias foram pesquisadas com sucesso.")
         tkinter.messagebox.showinfo( 'Automação Faturamento - Fascal' , 'Buscas no portal da Fascal concluídos 😎✌' )

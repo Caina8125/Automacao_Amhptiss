@@ -25,7 +25,7 @@ class Login(PageElement):
         self.driver.find_element(*self.senha).send_keys(senha)
         self.driver.find_element(*self.acessar).click()
 
-class Recurso(PageElement):
+class RecursoSis(PageElement):
     recurso_glosa = (By.XPATH, '//*[@id="sidebar_recursoGlosa"]')
     recursar_glosa = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[6]/ul/li[1]/a')
     lista_excel = []
@@ -308,7 +308,7 @@ def recursar_sis(user, password):
             senha = "Amhpbrasil2024*"
         )
 
-        Recurso(driver, url).fazer_recurso()
+        RecursoSis(driver, url).fazer_recurso()
         tkinter.messagebox.showinfo( 'Automação SIS Recurso de Glosa' , 'Recursos no portal do SIS Concluídos 😎✌' )
     except Exception as e:
         tkinter.messagebox.showerror( 'Erro Automação' , f'Ocorreu uma exceção não tratada \n {e.__class__.__name__} - {e}' )

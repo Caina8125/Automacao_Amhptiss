@@ -36,7 +36,7 @@ class Login(PageElement):
         self.driver.find_element(*self.entrar).click()
         time.sleep(5)
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoLife(PageElement):
     body = (By.XPATH, '/html/body')
     frame1 = (By.XPATH, '/html/body/table/tbody/tr/td/iframe')
     frame2 = (By.XPATH, '/html/frameset/frame[1]')
@@ -188,8 +188,8 @@ def demonstrativo_life(user, password):
         login_page = Login(driver, url)
         login_page.open()
         login_page.exe_login(usuario, senha)
-        BaixarDemonstrativo(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoLife(driver, url).exe_caminho()
+        BaixarDemonstrativoLife(driver, url).baixar_demonstrativo(planilha)
         driver.quit()
         tkinter.messagebox.showinfo('Automação', 'Downloads concluídos com sucesso!')
 

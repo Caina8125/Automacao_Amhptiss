@@ -25,7 +25,7 @@ class Login(PageElement):
         self.driver.find_element(*self.senha).send_keys(senha)
         self.driver.find_element(*self.logar).click()
 
-class caminho(PageElement):
+class BaixarDemonstrativoSerpro(PageElement):
     demonstrativo        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/a/span[1]')
     analise_conta        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/ul/li[3]/a/span')
     selecionar_convenio  = (By.XPATH, '//*[@id="s2id_OperadorasCredenciadas_HandleOperadoraSelected"]/a/span[2]/b')
@@ -209,12 +209,12 @@ def demonstrativo_serpro(user, password):
             senha="Amhp@0073"
         )
 
-        caminho(driver, url).Alert()
+        BaixarDemonstrativoSerpro(driver, url).Alert()
 
         
-        caminho(driver, url).exe_caminho()
+        BaixarDemonstrativoSerpro(driver, url).exe_caminho()
 
-        caminho(driver, url).buscar_demonstrativo()
+        BaixarDemonstrativoSerpro(driver, url).buscar_demonstrativo()
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

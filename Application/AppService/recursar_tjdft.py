@@ -93,7 +93,7 @@ class caminho(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.fechar).click()                    
 
-class inserir_dados(PageElement):
+class inserir_dados_tjdft(PageElement):
     protocolo = (By.XPATH, '//*[@id="Protocolo"]')
     pesquisar = (By.XPATH, '//*[@id="btn-Pesquisar"]/span')
     selecionar = (By.XPATH, '//*[@id="DataGrid"]/tbody[1]/tr[1]/td[2]/input')
@@ -1425,7 +1425,7 @@ def recursar_tjdft(user, password):
 
         print('Pegar Alerta Acionado!')
         caminho(driver, url).exe_caminho()
-        inserir = inserir_dados(driver, url)
+        inserir = inserir_dados_tjdft(driver, url)
         print('Protocolo Acionado')
         inserir.Protocolo()
         print('Todos os procedimentos foram recursados com sucesso.')

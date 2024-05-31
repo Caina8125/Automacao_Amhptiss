@@ -82,7 +82,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.relatorio_de_faturas).click()
         time.sleep(2)
 
-class Recurso(PageElement):
+class RecursoStm(PageElement):
     body = (By.XPATH, '/html/body')
     codigo = (By.XPATH, '/html/body/main/div/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/input-text[1]/div/div/input')
     pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
@@ -453,7 +453,7 @@ def recursar_stm(user, password):
         login_page.open()
         login_page.exe_login(usuario, senha)
         Caminho(driver, url).exe_caminho()
-        Recurso(driver, url).fazer_recurso(pasta)
+        RecursoStm(driver, url).fazer_recurso(pasta)
         driver.quit()
         tkinter.messagebox.showinfo( 'Automação' , f'Protocolos recursados com sucesso!' )
     except Exception as e:

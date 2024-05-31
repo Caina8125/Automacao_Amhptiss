@@ -7,9 +7,7 @@ from tkinter import ttk
 import tkinter.messagebox
 from PIL import Image, ImageTk
 from Presentation.Desktop.Gif import ImageLabel
-import Application.AppService.FaturasPreFaturadasAppService as Faturas
-import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
-import Application.AppService.EnviarPdfBrb as EnviarBrb
+import Application.AppService as service
 
 class TelaSelecionarPasta:
     def __init__(self, janela, funcao):

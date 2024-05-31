@@ -25,7 +25,7 @@ class Login(PageElement):
         self.driver.find_element(*self.senha).send_keys(senha)
         self.driver.find_element(*self.acessar).click()
 
-class Recurso(PageElement):
+class RecursoCaixa(PageElement):
     reapresentacao = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[7]')
     reapresentar_peg = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[7]/ul/li[1]')
     lista_excel = []
@@ -316,7 +316,7 @@ def recursar_caixa(user, password):
             usuario = "00735860000173",
             senha = "!Saude2024"
         )
-        Recurso(driver, url).fazer_recurso()
+        RecursoCaixa(driver, url).fazer_recurso()
         tkinter.messagebox.showinfo( 'Automação Saúde Caixa Recurso de Glosa' , 'Recursos do Saúde Caixa Concluídos 😎✌' )
     except Exception as e:
         tkinter.messagebox.showerror( 'Erro Automação' , f'Ocorreu uma excessão não tratada \n {e.__class__.__name__}: {e}' )

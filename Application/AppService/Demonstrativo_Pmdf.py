@@ -36,7 +36,7 @@ class Caminho(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.dem_glosa_analitico).click()
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoPmdf(PageElement):
     fatura = (By.XPATH, '//*[@id="FormMain"]/table/tbody/tr/td[2]/table/tbody/tr/td[1]/input[1]')
     botao_ok = (By.XPATH, '/html/body/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[1]/td/div/div[2]/div/div/div/div[1]/a')
     dem_glosa_analitico = (By.XPATH, '/html/body/table/tbody/tr[1]/td/div/table/tbody/tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr/td[1]/div[2]/div[1]/a')
@@ -182,7 +182,7 @@ def demonstrativo_pmdf(user, password):
         login_page.open()
         login_page.exe_login(usuario, senha)
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoPmdf(driver, url).baixar_demonstrativo(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

@@ -60,7 +60,7 @@ class Caminho(PageElement):
         self.driver.find_element(By.XPATH, '/html/body/div[8]/div[2]/div[13]/span[2]').click()
 
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoCasembrapa(PageElement):
     salutis = (By.XPATH, '//*[@id="menuButtons"]/td[1]')
     numero_dos_lotes_prestador = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/textarea')
     numero_dos_lotes_operadora1 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/textarea')
@@ -295,7 +295,7 @@ def demonstrativo_casembrapa(user, password):
         global caminho
         caminho = Caminho(driver, url)
         caminho.exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoCasembrapa(driver, url).baixar_demonstrativo(planilha)
         driver.quit()
     
     except FileNotFoundError as err:

@@ -67,7 +67,7 @@ class Caminho(PageElement):
         except:
             pass
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoEvida(PageElement):
     lote = (By.XPATH, '//*[@id="txtLote"]')
     pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
     ver_xml = (By.XPATH, '//*[@id="div-Servicos"]/div[1]/div[4]/div/div/div[1]/div/div[2]/a[2]')
@@ -229,7 +229,7 @@ def demonstrativo_evida(user, password):
 
         caminho = Caminho(driver, url)
         caminho.exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoEvida(driver, url).baixar_demonstrativo(planilha)
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

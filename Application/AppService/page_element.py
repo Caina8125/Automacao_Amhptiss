@@ -21,9 +21,8 @@ class PageElement(ABC):
     h6: tuple = (By.TAG_NAME, 'h6')
     table: tuple = (By.TAG_NAME, 'table')
 
-    def __init__(self, url: str = '') -> None:
+    def __init__(self) -> None:
         self.driver = self.get_chrome_driver()
-        self.url:str = url
 
     def get_chrome_driver():
         options: dict = {

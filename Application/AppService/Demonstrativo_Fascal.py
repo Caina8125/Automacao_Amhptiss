@@ -51,7 +51,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.somente_com_glosa).click()
         time.sleep(2)
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoFascal(PageElement):
     codigo = (By.XPATH, '/html/body/main/div/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/input-text[1]/div/div/input')
     pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
     ver_xml = (By.XPATH, '//*[@id="div-Servicos"]/div[1]/div[4]/div/div/div[1]/div/div[2]/a[2]')

@@ -61,7 +61,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.detalhar_demonstrativo).click()
         time.sleep(4)
 
-class BaixarDemonstrativos(PageElement):
+class BaixarDemonstrativosGama(PageElement):
     tabela = (By.XPATH, '/html/body/div[2]/div[1]/div/div[2]/div[1]/div[7]/table')
     baixar_xml = (By.XPATH, '//*[@id="demonstrativoLotePagamento"]/div[2]/a')
     fechar = (By.XPATH, '//*[@id="demonstrativoLotePagamento"]/a')
@@ -139,7 +139,7 @@ def demonstrativo_gama(user, password):
         login_page.open()
         login_page.exe_login(usuario, senha)
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativos(driver, url).baixar_demonstrativos()
+        BaixarDemonstrativosGama(driver, url).baixar_demonstrativos()
 
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

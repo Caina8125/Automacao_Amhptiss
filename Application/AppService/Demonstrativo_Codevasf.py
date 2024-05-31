@@ -44,7 +44,7 @@ class Caminho(PageElement):
         self.driver.find_element(*self.demonstrativo_de_analise).click()
         time.sleep(2)
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoCodevasf(PageElement):
     botao_numero_do_lote = (By.XPATH, '//*[@id="_up_ui_form"]/label[2]/input')
     botao_numero_do_protocolo = (By.XPATH, '//*[@id="_up_ui_form"]/label[1]/input')
     inserir_numero_do_lote = (By.XPATH, '//*[@id="lote"]') 
@@ -222,7 +222,7 @@ def demonstrativo_codevasf(user, password):
         login_page.open()
         login_page.exe_login(usuario, senha)
         Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo(planilha)
+        BaixarDemonstrativoCodevasf(driver, url).baixar_demonstrativo(planilha)
     
     except FileNotFoundError as err:
         tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')

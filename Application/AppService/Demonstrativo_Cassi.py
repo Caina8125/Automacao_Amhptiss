@@ -40,7 +40,7 @@ class caminho(PageElement):
         time.sleep(4)
         self.driver.get('https://servicosonline.cassi.com.br/Prestador/RecursoRevisaoPagamento/TISS/DemonstrativoAnaliseContas/Index')
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoCassi(PageElement):
     data_inicial = (By.XPATH, '//*[@id="DataInicial"]')
     data_final = (By.XPATH, '//*[@id="DataFinal"]')
     consultar = (By.XPATH, '/html/body/div[1]/div[5]/section/div/form/fieldset/div[4]/div/button')
@@ -188,7 +188,7 @@ def demonstrativo_cassi(data_inicial, data_final, user, password):
             senha = "amhpdf123"
         )
         caminho(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demontrativo(data_inicial, data_final)
+        BaixarDemonstrativoCassi(driver, url).baixar_demontrativo(data_inicial, data_final)
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")

@@ -92,7 +92,7 @@ class caminho(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.fechar).click()                    
 
-class inserir_dados(PageElement):
+class inserir_dados_benner(PageElement):
     protocolo = (By.XPATH, '//*[@id="Protocolo"]')
     pesquisar = (By.XPATH, '//*[@id="btn-Pesquisar"]/span')
     selecionar = (By.XPATH, '/html/body/div[3]/div[2]/div/div[2]/div/div/bc-smart-table-manager/div/div/div[2]/div/bc-smart-table/div[2]/table/tbody[1]/tr[1]/td[2]/input')
@@ -1407,7 +1407,7 @@ def recursar_benner(user, password):
 
 
 
-        inserir = inserir_dados(driver, url)
+        inserir = inserir_dados_benner(driver, url)
         print('Protocolo Acionado')
         inserir.Protocolo()
         print('Todos os procedimentos foram recursados com sucesso.')

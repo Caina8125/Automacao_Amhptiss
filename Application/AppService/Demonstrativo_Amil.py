@@ -30,7 +30,7 @@ class Login(PageElement):
         self.driver.find_element(*self.entrar).click()
         time.sleep(5)
 
-class BaixarDemonstrativo(PageElement):
+class BaixarDemonstrativoAmil(PageElement):
     amil_logo = (By.XPATH, '/html/body/as-main-app/as-comunicado-detalhe/as-base-layout/as-header-container/header/div/h1/a')
     acesso_sis_amil = (By.XPATH, '/html/body/as-main-app/as-comunicado-detalhe/as-base-layout/section/div/as-navbar/nav/div[2]/form/button')
     menu = (By.XPATH, '/html/body/div[2]/div[3]/div')
@@ -168,8 +168,8 @@ def demonstrativo_amil(user, password):
         login_page = Login(driver, url)
         login_page.open()
         login_page.exe_login(usuario, senha)
-        BaixarDemonstrativo(driver, url).exe_caminho()
-        BaixarDemonstrativo(driver, url).baixar_demonstrativo()
+        BaixarDemonstrativoAmil(driver, url).exe_caminho()
+        BaixarDemonstrativoAmil(driver, url).baixar_demonstrativo()
         driver.quit()
         tkinter.messagebox.showinfo('Automação', 'Downloads concluídos com sucesso!')
 

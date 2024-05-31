@@ -40,7 +40,7 @@ class caminho(PageElement):
         time.sleep(4)
         self.driver.get('https://servicosonline.cassi.com.br/Prestador/RecursoRevisaoPagamento/TISS/DemonstrativoAnaliseContas/Index')
 
-class Recursar(PageElement):
+class RecursarCassi(PageElement):
     protocolo_input = (By.XPATH, '//*[@id="ProtocoloPagamento"]')
     consultar = (By.ID, 'btnConsultar')
     voltar = (By.XPATH, '//*[@id="btnVoltar"]')
@@ -348,7 +348,7 @@ def recursar_cassi(user, password):
             senha = "amhpdf123"
         )
         caminho(driver, url).exe_caminho()
-        Recursar(driver, url).recurso(pasta=pasta)
+        RecursarCassi(driver, url).recurso(pasta=pasta)
     
     except Exception as err:
         tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
