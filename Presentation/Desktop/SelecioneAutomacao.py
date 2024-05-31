@@ -7,6 +7,8 @@ import Application.AppService.ObterAutomacaoSetorAppService as AutomacoesAppServ
 from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
 import time
 
+from Presentation.Desktop.SelecionarPasta import TelaSelecionarPasta
+
 
 class TelaSelecioneAutomacoes:
     def __init__(self, setorUsuario, janela,token):
@@ -60,11 +62,193 @@ class TelaSelecioneAutomacoes:
         self.ocultarBotaoDark()
 
         match automacaoSelecionada:
+            case "Faturamento - Anexar Guia Geap":
+                ...
+
+            case "Faturamento - Conferência de Protocolos":
+                ...
+
+            case "Faturamento - Conferência GEAP":
+                ...
+
+            case "Faturamento - Conferência Bacen":
+                ...
+
+            case "Faturamento - Enviar PDF Bacen":
+                ...
+
+            case "Faturamento - Enviar PDF Benner":
+                ...
+
             case "Faturamento - Enviar PDF BRB":
                 telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=10)
-                
+
             case "Faturamento - Enviar PDF GDF":
                 telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=433)
+
+            case "Faturamento - Enviar XML Bacen":
+                ...
+
+            case "Faturamento - Enviar XML Benner":
+                ...
+
+            case "Faturamento - Enviar XML Caixa":
+                ...
+
+            case "Faturamento - Leitor de PDF GAMA":
+                ...
+
+            case "Faturamento - Verificar Situação BRB":
+                ...
+
+            case "Faturamento - Verificar Situação Fascal":
+                ...
+
+            case "Faturamento - Verificar Situação Gama":
+                ...
+
+            case "Financeiro - Buscar Faturas GEAP":
+                ...
+
+            case "Financeiro - Demonstrativos Amil":
+                ...
+
+            case "Financeiro - Demonstrativos BRB":
+                ...
+
+            case "Financeiro - Demonstrativos Câmara dos Deputados":
+                ...
+
+            case "Financeiro - Demonstrativos Camed":
+                ...
+
+            case "Financeiro - Demonstrativos Casembrapa":
+                ...
+
+            case "Financeiro - Demonstrativos Cassi":
+                ...
+
+            case "Financeiro - Demonstrativos Codevasf":
+                ...
+
+            case "Financeiro - Demonstrativos E-Vida":
+                ...
+
+            case "Financeiro - Demonstrativos Fapes":
+                ...
+
+            case "Financeiro - Demonstrativos Fascal":
+                ...
+
+            case "Financeiro - Demonstrativos Gama":
+                ...
+
+            case "Financeiro - Demonstrativos Life Empresarial":
+                ...
+
+            case "Financeiro - Demonstrativos MPU":
+                ...
+
+            case "Financeiro - Demonstrativos PMDF":
+                ...
+
+            case "Financeiro - Demonstrativos Postal":
+                ...
+
+            case "Financeiro - Demonstrativos Real Grandeza":
+                ...
+
+            case "Financeiro - Demonstrativos Saúde Caixa":
+                ...
+
+            case "Financeiro - Demonstrativos Serpro":
+                ...
+
+            case "Financeiro - Demonstrativos SIS":
+                ...
+
+            case "Financeiro - Demonstrativos STF":
+                ...
+
+            case "Financeiro - Demonstrativos TJDFT":
+                ...
+
+            case "Financeiro - Demonstrativos Unafisco":
+                ...
+
+            case "Glosa - Gerador de Planilha GDF":
+                ...
+
+            case "Glosa - Gerar Planilhas SERPRO":
+                ...
+
+            case "Glosa - Filtro Matrículas":
+                ...
+
+            case "Glosa - Recursar Amil":
+                ...  
+
+            case "Glosa - Recursar Benner(Câmara, CAMED, FAPES, Postal)":
+                ...
+
+            case "Glosa - Recursar BRB":
+                TelaSelecionarPasta(janela=self.tela, funcao=print)
+
+            case "Glosa - Recursar Casembrapa":
+                ...
+
+            case "Glosa - Recursar Cassi":
+                ...
+
+            case "Glosa - Recursar GEAP Duplicado":
+                ...
+
+            case "Glosa - Recursar GEAP Sem Duplicado":
+                ...
+            
+            case "Glosa - Recursar E-VIDA":
+                ...
+
+            case "Glosa - Recursar Fascal":
+                ...
+
+            case "Glosa - Recursar Gama":
+                ...
+
+            case "Glosa - Recursar Petrobras":
+                ...
+
+            case "Glosa - Recursar Real Grandeza":
+                ...
+
+            case "Glosa - Recursar Saúde Caixa":
+                ...
+
+            case "Glosa - Recursar SIS":
+                ...
+
+            case "Glosa - Recursar STF":
+                ...
+
+            case "Glosa - Recursar STM":
+                ...
+
+            case "Glosa - Recursar TJDFT":
+                ...
+
+            case "Glosa - Recursar TST":
+                ...
+
+            case "Integralis - Enviar anexos Bradesco":
+                ...
+
+            case "Relatório - Brindes":
+                ...
+
+            case "Tesouraria - Nota Fiscal":
+                ...
+            case _:
+                ...
             
         
 

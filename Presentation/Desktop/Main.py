@@ -10,7 +10,7 @@ class Aplication:
         self.janela.geometry("640x480")
         self.janela.title("AMHP - Automações")
         self.janela.iconbitmap(r"Infra\Arquivos\Robo.ico")
-        # self.janela.resizable(width=False, height=False)
+        self.janela.resizable(width=False, height=False)
         self.janela.eval('tk::PlaceWindow . center')
         Login(self.janela, self.corAtual)
         # chamada_assincrona(self)

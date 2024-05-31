@@ -97,7 +97,6 @@ class telaTabelaFaturas():
     
     def iniciar(self):
         self.ocultarTreeView()
-        self.botaoRoboPaz()
         ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
         faturasTela = self.obterFaturasEncontradas()
         EnviarBrb.enviar_pdf(faturasTela)

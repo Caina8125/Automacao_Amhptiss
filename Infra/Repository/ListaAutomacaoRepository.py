@@ -36,12 +36,26 @@ def obterListaFinanceiro():
 
 def obterListaGlosa():
     automacaoGlosa = [  "Glosa - Gerador de Planilha GDF",
+                        "Glosa - Gerar Planilhas SERPRO",
+                        "Glosa - Filtro Matrículas",
+                        "Glosa - Recursar Amil",
+                        "Glosa - Recursar Benner(Câmara, CAMED, FAPES, Postal)",
+                        "Glosa - Recursar BRB",
+                        "Glosa - Recursar Casembrapa",
+                        "Glosa - Recursar Cassi",
+                        "Glosa - Recursar E-VIDA",
+                        "Glosa - Recursar Fascal",
+                        "Glosa - Recursar Gama",
                         "Glosa - Recursar GEAP Duplicado",
                         "Glosa - Recursar GEAP Sem Duplicado",
-                        "Glosa - Recursar Postal",
+                        "Glosa - Recursar Petrobras",
+                        "Glosa - Recursar Real Grandeza",
                         "Glosa - Recursar Saúde Caixa",
-                        "Glosa - Recursar Serpro",
-                        "Glosa - Recursar SIS",]
+                        "Glosa - Recursar SIS",
+                        "Glosa - Recursar STF",
+                        "Glosa - Recursar STM",
+                        "Glosa - Recursar TJDFT",
+                        "Glosa - Recursar TST", ]
     return automacaoGlosa
 
 def obterListaTesouraria():
