@@ -1,7 +1,8 @@
 import time
 import pyautogui
 import time
-import Pidgin
+from Application.AppService.Pidgin import notaFiscal
+from Application.AppService.page_element import PageElement
 from abc import ABC
 import pandas as pd
 from datetime import datetime
@@ -9,7 +10,6 @@ from selenium import webdriver
 from tkinter import filedialog
 from openpyxl import load_workbook
 from selenium.webdriver.common.by import By
-from Application.AppService.page_element import PageElement
 
 
 class Login(PageElement):
@@ -415,10 +415,10 @@ def subirNF2(user, password):
 
         time.sleep(1)
         Nf(driver,url).inserirDadosNf(dados)
-        Pidgin.notaFiscal("Todas as Notas Concluídas")
+        notaFiscal("Todas as Notas Concluídas")
         time.sleep(1)
     except Exception as e:
-        Pidgin.notaFiscal(f"Ocorreu um erro sem tratamento: {e.__class__.__name__}: {e}")
+        notaFiscal(f"Ocorreu um erro sem tratamento: {e.__class__.__name__}: {e}")
 
         driver.quit()
         pass
