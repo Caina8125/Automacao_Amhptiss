@@ -15,7 +15,7 @@ from .Gerar_relatorios_Brindes import Gerar_Relat_Normal
 from .Nota_Fiscal_2 import Nf
 from .gerador_de_planilha import gerar_planilha
 from .leitor_de_pdf_gama import PDFReader
-from .bacen_conferencia import ConferirFatura
+# from .bacen_conferencia import ConferirFatura
 #__________________________________________________________________
 
 #Facil_________________________________________________________________________

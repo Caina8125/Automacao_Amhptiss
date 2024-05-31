@@ -24,6 +24,7 @@ class PageElement(ABC):
     def __init__(self) -> None:
         self.driver = self.get_chrome_driver()
 
+    @staticmethod
     def get_chrome_driver():
         options: dict = {
         'proxy' : {

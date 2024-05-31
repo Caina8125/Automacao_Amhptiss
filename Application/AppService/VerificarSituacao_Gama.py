@@ -6,7 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from openpyxl import load_workbook
 from selenium.webdriver.common.by import By
-from Filtro_Faturamento import *
+from Application.AppService.Filtro_Faturamento import *
 from selenium.webdriver.chrome.options import Options
 from seleniumwire import webdriver
 from Application.AppService.page_element import PageElement

@@ -1,7 +1,6 @@
 import os
 import time
 import shutil
-import Pidgin
 import tkinter
 import pandas as pd
 import tkinter.messagebox

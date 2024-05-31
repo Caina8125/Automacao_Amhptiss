@@ -9,7 +9,7 @@ from openpyxl import load_workbook
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from Filtro_Faturamento import processar_planilha, remove
+from Application.AppService.Filtro_Faturamento import processar_planilha, remove
 from selenium.webdriver.chrome.options import Options
 import tkinter
 from Application.AppService.page_element import PageElement

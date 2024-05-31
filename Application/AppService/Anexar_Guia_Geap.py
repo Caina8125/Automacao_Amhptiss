@@ -35,7 +35,7 @@ class AnexarGuiaGeap(PageElement):
     confirmar = (By.XPATH, '/html/body/div[1]/div[2]/div/div/ui-panel/div[2]/button/div[2]/div/div')
 
     def __init__(self, url, cpf, senha):
-        super.__init__()
+        super().__init__()
         self.url = url
         self.cpf = cpf
         self.senha = senha

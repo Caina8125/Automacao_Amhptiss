@@ -54,15 +54,18 @@ class TelaSelecionarPasta:
             self.diretorioInput.configure(state='readonly')
 
     def iniciar_automacao(self, obj):
-        diretorio = self.diretorioInput.get()
-        obj.inicia_automacao(diretorio)
-
         self.ocultar_widgets()
-
         ImageLabel.iniciarGif(self,janela=self.terceiroContainer,texto="Trabalhando...")
+        diretorio = self.diretorioInput.get()
+        threading.Thread(target=lambda: self.run_function(obj, diretorio)).start()
+
+    def run_function(self, obj, diretorio):
+        obj.inicia_automacao(diretorio)
+        ImageLabel.ocultarGif(self)
     
     def ocultar_widgets(self):
         self.informePastaLbl.place_forget()
         self.diretorioInput.pack_forget()
         self.iniciar.pack_forget()
+        self.btnSelecionarDiretorio.pack_forget()
         
