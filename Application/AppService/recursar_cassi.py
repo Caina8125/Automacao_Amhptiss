@@ -1,46 +1,18 @@
 import tkinter.messagebox
-from tkinter import filedialog
 from selenium.webdriver.common.by import By
 from openpyxl import load_workbook
-from selenium import webdriver
-from abc import ABC
 import pandas as pd
 import time
 import os
-from selenium.webdriver.chrome.options import Options
-from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
-    usuario = (By.XPATH, '//*[@id="cpfOuCnpj"]')
-    senha = (By.XPATH, '//*[@id="senha"]')
+class RecursarCassi(PageElement):
+    usuario_input = (By.XPATH, '//*[@id="cpfOuCnpj"]')
+    senha_input = (By.XPATH, '//*[@id="senha"]')
     acessar = (By.XPATH, '//*[@id="loginGeral"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.implicitly_wait(30)
-        time.sleep(1.5)
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        time.sleep(1.5)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(1.5)
-        self.driver.find_element(*self.acessar).click()
-        time.sleep(1.5)
-
-class caminho(PageElement):
     finalizar = (By.XPATH, '//*[@id="step-0"]/nav/button')
     demonstrativo_tiss = (By.XPATH, '/html/body/div[1]/aside/section/div/div/div[1]/div[1]/ul/li[11]/a')
     demonstrativo_de_analises = (By.XPATH, '/html/body/div[1]/aside/section/div/div/div[1]/div[1]/ul/li[11]/ul/li[1]/a')
-
-    def exe_caminho(self):
-        self.driver.implicitly_wait(30)
-        self.driver.find_element(*self.finalizar).click()
-        time.sleep(4)
-        self.driver.get('https://servicosonline.cassi.com.br/Prestador/RecursoRevisaoPagamento/TISS/DemonstrativoAnaliseContas/Index')
-
-class RecursarCassi(PageElement):
     protocolo_input = (By.XPATH, '//*[@id="ProtocoloPagamento"]')
     consultar = (By.ID, 'btnConsultar')
     voltar = (By.XPATH, '//*[@id="btnVoltar"]')
@@ -69,8 +41,37 @@ class RecursarCassi(PageElement):
     div_lista_guias = (By.XPATH, '/html/body/div[1]/div[5]/section/div/div[7]/div[2]/div/div/fieldset/div[2]')
     protocolo_contestacao = (By.XPATH, '/html/body/div[1]/div[5]/section/div/div[7]/div[1]/div/table/tbody/tr/td[1]')
 
-    def recurso(self, pasta):
-        lista_de_planilhas = [f"{pasta}/{arquivo}" for arquivo in os.listdir(pasta) if arquivo.endswith('.xlsx')]
+    def __init__(self, url, usuario, senha):
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.implicitly_wait(30)
+        time.sleep(1.5)
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        time.sleep(1.5)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(1.5)
+        self.driver.find_element(*self.acessar).click()
+        time.sleep(1.5)
+
+    def exe_caminho(self):
+        self.driver.implicitly_wait(30)
+        self.driver.find_element(*self.finalizar).click()
+        time.sleep(4)
+        self.driver.get('https://servicosonline.cassi.com.br/Prestador/RecursoRevisaoPagamento/TISS/DemonstrativoAnaliseContas/Index')
+
+    def recurso(self, **kwargs):
+        diretorio = kwargs.get('diretorio')
+
+        lista_de_planilhas = [f"{diretorio}/{arquivo}" for arquivo in os.listdir(diretorio) if arquivo.endswith('.xlsx')]
+
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
         for i in range(0,10):
             try:
 
@@ -317,39 +318,3 @@ class RecursarCassi(PageElement):
                 print(e)
                 self.driver.get('https://servicosonline.cassi.com.br/Prestador/RecursoRevisaoPagamento/TISS/DemonstrativoAnaliseContas/Index')
                 continue
-#---------------------------------------------------------------------------------------------------------------
-def recursar_cassi(user, password):
-    try:
-        pasta = filedialog.askdirectory()
-        global url
-        url = 'https://servicosonline.cassi.com.br/GASC/v2/Usuario/Login/Prestador'
-        chrome_options = Options()
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-
-        options = {
-        'proxy': {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, options=chrome_options, seleniumwire_options=options)
-        except:
-            driver = webdriver.Chrome(options=chrome_options, seleniumwire_options=options)
-
-        login_page = Login(driver, url)
-        login_page.open()
-
-        login_page.exe_login(
-            usuario = "00735860000173",
-            senha = "amhpdf123"
-        )
-        caminho(driver, url).exe_caminho()
-        RecursarCassi(driver, url).recurso(pasta=pasta)
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")

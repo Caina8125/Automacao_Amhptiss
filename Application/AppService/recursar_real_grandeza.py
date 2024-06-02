@@ -1,56 +1,17 @@
-from tkinter import filedialog
 import pandas as pd
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 from openpyxl import load_workbook
-import tkinter.messagebox
-import tkinter
 import os
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
+class RecursoReal(PageElement):
     prestador_pj = (By.XPATH, '//*[@id="tipoAcesso"]/option[6]')
-    usuario = (By.XPATH, '//*[@id="login-entry"]')
-    senha = (By.XPATH, '//*[@id="password-entry"]')
+    usuario_input = (By.XPATH, '//*[@id="login-entry"]')
+    senha_input = (By.XPATH, '//*[@id="password-entry"]')
     entrar = (By.XPATH, '//*[@id="BtnEntrar"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.find_element(*self.prestador_pj).click()
-        time.sleep(2)
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        time.sleep(2)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(2)
-        self.driver.find_element(*self.entrar).click()
-        time.sleep(5)
-
-class Caminho(PageElement):
     faturas = (By.XPATH, '//*[@id="menuPrincipal"]/div/div[10]/a')
     relatorio_de_faturas = (By.XPATH, '/html/body/header/div[4]/div/div/div/div[10]/div[1]/div[2]/div/div[2]/div/div/div/div[1]/a')
-
-    def exe_caminho(self):
-        try:
-            self.driver.implicitly_wait(10)
-            time.sleep(2)
-            self.driver.find_element(*self.faturas)
-        except:
-            self.driver.refresh()
-            time.sleep(2)
-            login_page.exe_login(usuario, senha)
-
-        self.driver.implicitly_wait(30)
-        time.sleep(3)
-        self.driver.find_element(*self.faturas).click()
-        time.sleep(2)
-        self.driver.find_element(*self.relatorio_de_faturas).click()
-        time.sleep(2)
-
-class RecursoReal(PageElement):
     body = (By.XPATH, '/html/body')
     codigo = (By.XPATH, '/html/body/main/div/div[1]/div[2]/div/div/div[2]/div[1]/div[1]/input-text[1]/div/div/input')
     pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
@@ -76,6 +37,38 @@ class RecursoReal(PageElement):
     alerta = (By.XPATH, '/html/body/ul/li/div/div[2]/button[2]')
     guia_op = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/input') 
     buscar = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/span/span')
+
+    def __init__(self, url, usuario, senha):
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.find_element(*self.prestador_pj).click()
+        time.sleep(2)
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        time.sleep(2)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(2)
+        self.driver.find_element(*self.entrar).click()
+        time.sleep(5)
+
+    def exe_caminho(self):
+        try:
+            self.driver.implicitly_wait(10)
+            time.sleep(2)
+            self.driver.find_element(*self.faturas)
+        except:
+            self.driver.refresh()
+            time.sleep(2)
+            self.exe_login()
+
+        self.driver.implicitly_wait(30)
+        time.sleep(3)
+        self.driver.find_element(*self.faturas).click()
+        time.sleep(2)
+        self.driver.find_element(*self.relatorio_de_faturas).click()
+        time.sleep(2)
 
     def inicializar_atributos(self, recurso_iniciado):
         if recurso_iniciado == False:
@@ -135,11 +128,18 @@ class RecursoReal(PageElement):
             preencher_justificativa = (By.XPATH, f'/html/body/main/div[1]/div[3]/div/div/div[2]/div/div[1]/div/div/div[3]/div/table/tbody/tr[{i}]/td[9]/a/i')
         return (input_valor_recursado, preencher_justificativa)
 
-    def fazer_recurso(self, pasta):
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
+        diretorio = kwargs.get('diretorio')
+
         count = 0
         while count < 10:
             try:
-                lista_de_planilhas = [f"{pasta}//{arquivo}" for arquivo in os.listdir(pasta) if arquivo.endswith(".xlsx")]
+                lista_de_planilhas = [f"{diretorio}//{arquivo}" for arquivo in os.listdir(diretorio) if arquivo.endswith(".xlsx")]
 
                 for planilha in lista_de_planilhas:
                     if "Enviado" in planilha or "Sem_Pagamento" in planilha:
@@ -345,8 +345,8 @@ class RecursoReal(PageElement):
                 print(e)
                 content = self.driver.find_element(*self.body).text
                 if 'LOGON' in content:
-                    login_page.exe_login(usuario, senha)
-                    Caminho(driver, url).exe_caminho()
+                    self.exe_login()
+                    self.exe_caminho()
                     time.sleep(2)
                     self.driver.get("https://novowebplanfrg.facilinformatica.com.br/GuiasTISS/Relatorios/ViewRelatorioServicos")
 
@@ -387,41 +387,3 @@ class RecursoReal(PageElement):
                 count += 1
                 if count == 10:
                     return numero_guia
-
-def recursar_real(user, password):
-    try:
-        global driver, url
-        url = 'https://novowebplanfrg.facilinformatica.com.br/GuiasTISS/Logon'
-        pasta = filedialog.askdirectory()
-
-        options = {
-            'proxy' : {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            },
-            'verify_ssl': False
-        }
-
-        chrome_options = Options()
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
-        except:
-            driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options)
-        
-        global usuario, senha, login_page
-        usuario = "00735860000173"
-        senha = "00735860000173"
-
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(usuario, senha)
-        Caminho(driver, url).exe_caminho()
-        RecursoReal(driver, url).fazer_recurso(pasta)
-        driver.quit()
-    
-    except Exception as e:
-        tkinter.messagebox.showerror( 'Erro Automação' , f'Ocorreu uma excessão não tratada \n {e.__class__.__name__}: {e}' )
-        driver.quit()

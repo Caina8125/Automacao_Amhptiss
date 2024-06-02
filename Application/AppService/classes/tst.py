@@ -51,17 +51,10 @@ class Tst(PageElement):
     btn_ok_salvar = (By.XPATH, '/html/body/div[6]/div[10]/div/button')
     btn_voltar = (By.ID, 'botaoVoltar')
 
-    def __init__(self, driver: WebDriver, usuario: str, senha: str, diretorio: str, url: str = '') -> None:
-        super().__init__(driver, url)
+    def __init__(self,url: str, usuario: str, senha: str) -> None:
+        super().__init__(url)
         self.usuario = usuario
         self.senha = senha
-        self.lista_de_arquivos = [
-            {
-                'numero_processo': arquivo.replace('.xlsx', ''),
-                'path': f'{diretorio}\\{arquivo}',
-                }
-             for arquivo in listdir(diretorio)
-             if arquivo.endswith('.xlsx')]
 
     def login(self):
         self.driver.implicitly_wait(30)
@@ -78,14 +71,25 @@ class Tst(PageElement):
         self.driver.find_element(*self.manter_demonstrativo_de_pag).click()
         sleep(1.5)
 
-    def recursar_tst(self):
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
         self.open()
         self.login()
         self.driver.get('https://aplicacao7.tst.jus.br/tstsaude/DemonstrativoPagamentoConsultar.do?load=1')
 
+        diretorio = kwargs.get('diretorio')
+
+        lista_de_arquivos = [
+            {
+                'numero_processo': arquivo.replace('.xlsx', ''),
+                'path': f'{diretorio}\\{arquivo}',
+                }
+             for arquivo in listdir(diretorio)
+             if arquivo.endswith('.xlsx')]
+
         for _ in range(0, 10):
             try:
-                for arquivo in self.lista_de_arquivos:
+                for arquivo in lista_de_arquivos:
                     path_planilha = arquivo['path']
                     novo_path = path_planilha.replace('.xlsx', '_enviado.xlsx')
                     path_nao_enviado = path_planilha.replace('.xlsx', '_nao_enviado.xlsx')

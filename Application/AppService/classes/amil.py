@@ -47,13 +47,11 @@ class Amil(PageElement):
     input_justificativa_guia = By.ID, 'justificativa_guia'
     div_sis_amil = By.CLASS_NAME, 'box-sis-amil'
 
-    def __init__(self, usuario: str, senha: str, diretorio: str, driver: WebDriver, url: str = '') -> None:
-        super().__init__(driver, url)
+    def __init__(self, usuario: str, senha: str, diretorio: str, url) -> None:
+        super().__init__(url)
         self.usuario = usuario
         self.senha = senha
         self.diretorio = diretorio
-        self.lista_de_arquivos = [f"{diretorio}\\{arquivo}" for arquivo in listdir(diretorio) if arquivo.endswith('.xlsx')]
-        self.driver.implicitly_wait(30)
     
     def login(self):
         self.click(self.fechar_dicas, 1)
@@ -95,12 +93,17 @@ class Amil(PageElement):
     #         btn_sisamil_list = [btn for btn in self.driver.find_elements(By.TAG_NAME, 'button') if "Acessar SisAmil" in btn.text]
     #         return btn_sisamil_list[0]
 
-    def exec_recurso(self):
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
         self.open()
         self.login()
         self.caminho()
 
-        for arquivo in self.lista_de_arquivos:
+        diretorio = kwargs.get('diretorio')
+
+        lista_de_arquivos = [f"{diretorio}\\{arquivo}" for arquivo in listdir(diretorio) if arquivo.endswith('.xlsx')]
+
+        for arquivo in lista_de_arquivos:
 
             if 'Enviado' in arquivo or 'Não_enviado' in arquivo:
                 continue
@@ -407,32 +410,3 @@ class Amil(PageElement):
         self.driver.switch_to.frame('principal')
         self.click(self.btn_fechar, 2)
         self.salvar_valor_planilha(path_planilha, "Sim", 23, num_linha)
-
-def recursar_amil(user, password):
-    try:
-        url = 'https://credenciado.amil.com.br/login'
-        diretorio = askdirectory()
-
-        chrome_options = Options()
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-
-        options = {
-        'proxy': {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-            'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options=options, options=chrome_options)
-        except:
-            driver = webdriver.Chrome(seleniumwire_options=options, options=chrome_options)
-
-        amil = Amil('10019642', 'Amhpdf2024', diretorio, driver, url)
-        amil.exec_recurso()
-        showinfo('', 'Recursos concluídos com sucesso!')
-
-    except Exception as e:
-        showerror('', f'Ocorreu uma exceção não tratada\n{e.__class__.__name__}\n{e}')

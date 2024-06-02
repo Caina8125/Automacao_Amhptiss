@@ -21,11 +21,10 @@ class PageElement(ABC):
     h6: tuple = (By.TAG_NAME, 'h6')
     table: tuple = (By.TAG_NAME, 'table')
 
-    def __init__(self) -> None:
-        self.driver = self.get_chrome_driver()
+    def __init__(self, url) -> None:
+        self.url = url
 
-    @staticmethod
-    def get_chrome_driver():
+    def init_driver(self):
         options: dict = {
         'proxy' : {
             'http': 'http://faturamento.fat:87316812#hg12@@10.0.0.230:3128',
@@ -40,9 +39,9 @@ class PageElement(ABC):
 
         try:
             servico: Service = Service(ChromeDriverManager().install())
-            return webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
+            self.driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
         except:
-            return webdriver.Chrome(seleniumwire_options= options, options = chrome_options) 
+            self.driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options) 
 
     def open(self) -> None:
         self.driver.get(self.url)
@@ -126,4 +125,4 @@ class PageElement(ABC):
             return False
         
     @abstractmethod    
-    def inicia_automacao(self): ...
+    def inicia_automacao(self, **kwargs): ...

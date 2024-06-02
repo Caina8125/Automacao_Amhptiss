@@ -74,19 +74,12 @@ class SalutisCasembrapa(PageElement):
     ultimo_lote = (By.XPATH, '/html/body/table/tbody/tr[1]/td/div/form/table/thead/tr[2]/td[1]/table/tbody/tr/td[1]/table/tbody/tr/td[5]/div')
     input_n_guia_operadora = (By.XPATH, '/html/body/table/tbody/tr/td/div/form/table/tbody/tr[1]/td[1]/table/tbody/tr[17]/td/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div/table/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[1]/td[2]/table/tbody/tr/td[1]/input')
 
-    def __init__(self, driver: Chrome, url: str, usuario: str, senha: str, diretorio: str) -> None:
-        super().__init__(driver=driver, url=url)
+    def __init__(self, url: str, usuario: str, senha: str) -> None:
+        super().__init__(url)
         self.usuario: str = usuario
         self.senha: str = senha
-        self.diretorio: str = diretorio
-        self.lista_de_planilhas: list[str] = [
-            f'{diretorio}\\{arquivo}' 
-            for arquivo in listdir(diretorio)
-            if arquivo.endswith('.xlsx')
-            ]
 
     def login(self):
-        self.open()
         self.driver.implicitly_wait(30)
         self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
         time.sleep(1)
@@ -407,11 +400,21 @@ class SalutisCasembrapa(PageElement):
         content = self.driver.find_element(*element).text
         return valor in content
 
-    def executa_recurso(self):
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
+        self.open()
         self.login()
         self.abrir_opcoes_menu()
 
-        for planilha in self.lista_de_planilhas:
+        diretorio = kwargs.get('diretorio')
+        
+        lista_de_planilhas: list[str] = [
+            f'{diretorio}\\{arquivo}' 
+            for arquivo in listdir(diretorio)
+            if arquivo.endswith('.xlsx')
+            ]
+
+        for planilha in lista_de_planilhas:
             if "Atalho" not in self.driver.find_element(*self.body).text:
                 self.get_click(self.salutis, "Atalho")
 

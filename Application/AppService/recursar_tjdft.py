@@ -1,40 +1,63 @@
-from tkinter import filedialog
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
 from openpyxl import load_workbook
 import pandas as pd
 import time
 import os
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from seleniumwire import webdriver
-import tkinter
 from Application.AppService.page_element import PageElement
 
 
-class Login(PageElement):
-    email = (By.XPATH, '//*[@id="Email"]')
-    senha = (By.XPATH, '//*[@id="Senha"]')
+class inserir_dados_tjdft(PageElement):
+    email_input = (By.XPATH, '//*[@id="Email"]')
+    senha_input = (By.XPATH, '//*[@id="Senha"]')
     logar = (By.XPATH, '//*[@id="btnLogin"]')
-
-    def exe_login(self, email, senha):
-        self.driver.find_element(*self.email).send_keys(email)
-        time.sleep(2)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(2)
-        self.driver.find_element(*self.logar).click()
-
-
-class caminho(PageElement):
     lote_de_pagamento = (By.XPATH, '/html/body/div[3]/div[1]/div/ul/li[17]/a/span[1]')
     pesquisar_lotes = (By.XPATH, '/html/body/div[3]/div[1]/div/ul/li[17]/ul/li[3]/a/span[1]')
     proximo = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[2]')
     fechar = (By.XPATH, '//*[@id="bcInformativosModal"]/div/div/div[3]/button[3]')
     fechar_botao = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[2]')
     fechar_alerta = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[3]')
+    protocolo = (By.XPATH, '//*[@id="Protocolo"]')
+    pesquisar = (By.XPATH, '//*[@id="btn-Pesquisar"]/span')
+    selecionar = (By.XPATH, '//*[@id="DataGrid"]/tbody[1]/tr[1]/td[2]/input')
+    atualizar = (By.XPATH, '/html/body/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[2]/div/bc-smart-table/div[2]/table/thead/tr[1]/th/div[1]/div/div/a[3]/span')
+    recursoclick = (By.XPATH, '//*[@id="recurso-glosa"]/span')
+    controle = (By.XPATH, '//*[@id="GuiasGlosadasTable"]/thead/tr[1]/th/div[2]/input')
+    alerta2 = (By.XPATH, '//*[@id="bcInformativosModal"]/div/div/div[3]/button[3]')
+    marcar = (By.XPATH, '//*[@id="GuiasGlosadasTable"]/tbody[1]/tr[1]/td[1]/input')
+    procedimento = (By.XPATH, '//*[@id="bcRecursar"]/span')
+    checkbox = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[1]/tr[1]/td[1]/input')
+    checkbox2 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[2]/tr[1]/td[1]/input')
+    checkbox3 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[3]/tr[1]/td[1]/input')
+    checkbox4 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[4]/tr[1]/td[1]/input')
+    checkbox5 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[5]/tr[1]/td[1]/input')
+    checkbox6 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[6]/tr[1]/td[1]/input')
+    checkbox7 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[7]/tr[1]/td[1]/input')
+    checkbox8 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[8]/tr[1]/td[1]/input')
+    checkbox9 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[9]/tr[1]/td[1]/input')
+    checkbox10 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[10]/tr[1]/td[1]/input')
+    recursar = (By.LINK_TEXT, 'Recursar Procedimento')
+    justificativas = (By.CLASS_NAME, 'form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength')
+    valor = (By.XPATH, '//*[@id="ValorRecursado"]')
+    novo_recurso = (By.XPATH, '//*[@id="simpleConfirmationModal_btOk"]')
+    pesquisar_proc = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/thead/tr[1]/th/div[2]/input')
+    salvar = (By.XPATH, '/html/body/bc-modal-evolution/bc-modal-justificar-glosa/div/div/div/div[3]/button[2]')
+    fechar_recurso = (By.XPATH, '/html/body/bc-modal-evolution/bc-modal-justificar-glosa/div/div/div/div[1]/button')
+    fechar_botao = (By.XPATH, '//*[@id="bcInformativosModal"]/div/div/div[3]/button[3]')
+    fechar_alerta = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[3]')
+
+    def __init__(self, url, usuario, senha):
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.find_element(*self.email_input).send_keys(self.usuario)
+        time.sleep(2)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(2)
+        self.driver.find_element(*self.logar).click()
 
     def exe_caminho(self):
         try:
@@ -93,36 +116,6 @@ class caminho(PageElement):
         time.sleep(1)
         self.driver.find_element(*self.fechar).click()                    
 
-class inserir_dados_tjdft(PageElement):
-    protocolo = (By.XPATH, '//*[@id="Protocolo"]')
-    pesquisar = (By.XPATH, '//*[@id="btn-Pesquisar"]/span')
-    selecionar = (By.XPATH, '//*[@id="DataGrid"]/tbody[1]/tr[1]/td[2]/input')
-    atualizar = (By.XPATH, '/html/body/div[3]/div[2]/div/div[2]/div/div[2]/div/div/div[2]/div/bc-smart-table/div[2]/table/thead/tr[1]/th/div[1]/div/div/a[3]/span')
-    recursoclick = (By.XPATH, '//*[@id="recurso-glosa"]/span')
-    controle = (By.XPATH, '//*[@id="GuiasGlosadasTable"]/thead/tr[1]/th/div[2]/input')
-    alerta2 = (By.XPATH, '//*[@id="bcInformativosModal"]/div/div/div[3]/button[3]')
-    marcar = (By.XPATH, '//*[@id="GuiasGlosadasTable"]/tbody[1]/tr[1]/td[1]/input')
-    procedimento = (By.XPATH, '//*[@id="bcRecursar"]/span')
-    checkbox = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[1]/tr[1]/td[1]/input')
-    checkbox2 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[2]/tr[1]/td[1]/input')
-    checkbox3 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[3]/tr[1]/td[1]/input')
-    checkbox4 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[4]/tr[1]/td[1]/input')
-    checkbox5 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[5]/tr[1]/td[1]/input')
-    checkbox6 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[6]/tr[1]/td[1]/input')
-    checkbox7 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[7]/tr[1]/td[1]/input')
-    checkbox8 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[8]/tr[1]/td[1]/input')
-    checkbox9 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[9]/tr[1]/td[1]/input')
-    checkbox10 = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/tbody[10]/tr[1]/td[1]/input')
-    recursar = (By.LINK_TEXT, 'Recursar Procedimento')
-    justificativas = (By.CLASS_NAME, 'form-control ng-pristine ng-untouched ng-valid ng-empty ng-valid-maxlength')
-    valor = (By.XPATH, '//*[@id="ValorRecursado"]')
-    novo_recurso = (By.XPATH, '//*[@id="simpleConfirmationModal_btOk"]')
-    pesquisar_proc = (By.XPATH, '//*[@id="ProcedimentosGlosadosTable"]/thead/tr[1]/th/div[2]/input')
-    salvar = (By.XPATH, '/html/body/bc-modal-evolution/bc-modal-justificar-glosa/div/div/div/div[3]/button[2]')
-    fechar_recurso = (By.XPATH, '/html/body/bc-modal-evolution/bc-modal-justificar-glosa/div/div/div/div[1]/button')
-    fechar_botao = (By.XPATH, '//*[@id="bcInformativosModal"]/div/div/div[3]/button[3]')
-    fechar_alerta = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[3]')
-
     def justificar(self, qtd_glosas, justificativa_plan):
         for i in range(0, qtd_glosas):
             justificativa = self.driver.find_element(By.ID, f'Justificativas[{i}].Justificativa')
@@ -131,14 +124,21 @@ class inserir_dados_tjdft(PageElement):
             justificativa.send_keys(justificativa_plan)
             time.sleep(2)
 
-    def Protocolo(self):
-        nomesarquivos = os.listdir(pasta)
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
+        diretorio = kwargs.get('diretorio')
+
+        nomesarquivos = os.listdir(diretorio)
         for nome in nomesarquivos:
             if "Enviado" in nome:
                 print("PEG já enviado")
                 continue
             sem_extensao = nome.replace('.xlsx', '')
-            planilha = os.path.join(pasta, nome)
+            planilha = os.path.join(diretorio, nome)
             faturas_df1 = pd.read_excel(planilha)
             for index, linha in faturas_df1.iterrows():
                 try:
@@ -1375,7 +1375,7 @@ class inserir_dados_tjdft(PageElement):
                     print('Procedimento já recursados ou não existe esse código nesse protocolo.')
                     desmarcar = WebDriverWait(self.driver, 50).until(EC.presence_of_element_located((self.marcar))).click()
                     continue
-            novo_nome = pasta + '/' + sem_extensao + '_Enviado.xlsx'
+            novo_nome = diretorio + '/' + sem_extensao + '_Enviado.xlsx'
             try:
                 writer.close()
                 book.close()
@@ -1387,50 +1387,3 @@ class inserir_dados_tjdft(PageElement):
                 print("Erro ao renomear arquivo")
             self.driver.get('https://prosaudeconecta.tjdft.jus.br/Pagamentos/PesquisaLote/Index')
         self.driver.quit()
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def recursar_tjdft(user, password):
-    try:
-        url = 'https://prosaudeconecta.tjdft.jus.br/Account/Login'
-
-        global pasta
-        pasta = filedialog.askdirectory()
-
-        chrome_options = Options()
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-
-        options = {
-        'proxy': {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options=options, options=chrome_options)
-        except:
-            driver = webdriver.Chrome(seleniumwire_options=options, options=chrome_options)
-    except:
-        tkinter.messagebox.showerror( 'Erro Automação' , 'Ocorreu um erro inesperado' )
-
-    try:
-        login_page = Login(driver, url)
-        login_page.open()
-
-        login_page.exe_login(
-            email="recursoadministrativo@amhp.com.br", 
-            senha="@Amhp19"
-        )
-
-        print('Pegar Alerta Acionado!')
-        caminho(driver, url).exe_caminho()
-        inserir = inserir_dados_tjdft(driver, url)
-        print('Protocolo Acionado')
-        inserir.Protocolo()
-        print('Todos os procedimentos foram recursados com sucesso.')
-        tkinter.messagebox.showinfo( 'Automação' , 'Recursos do TJDFT Concluídos' )
-    
-    except Exception as e:
-        tkinter.messagebox.showerror( 'Erro Automação' , f'Ocorreu uma excessão não tratada:\n{e.__class__.__name__} - {e}' )
-        driver.quit()

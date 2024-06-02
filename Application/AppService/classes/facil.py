@@ -45,16 +45,10 @@ class Facil(PageElement):
     guia_op = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/input') 
     buscar = (By.XPATH, '/html/body/main/div[1]/div[1]/div[2]/div[1]/div[2]/input-text-search/div/div/div/span/span')
     
-    def __init__(self, driver, url: str, usuario: str, senha: str, diretorio: str) -> None:
-        super().__init__(driver=driver, url=url)
+    def __init__(self, url: str, usuario: str, senha: str) -> None:
+        super().__init__(url)
         self.usuario: str = usuario
         self.senha: str = senha
-        self.diretorio: str = diretorio
-        self.lista_de_planilhas: list[str] = [
-            f'{diretorio}\\{arquivo}' 
-            for arquivo in os.listdir(diretorio)
-            if arquivo.endswith('.xlsx')
-            ]
 
     def exe_login(self):
         self.driver.find_element(*self.prestador_pj).click()
@@ -83,12 +77,21 @@ class Facil(PageElement):
         self.driver.find_element(*self.relatorio_de_faturas).click()
         time.sleep(2)
 
-    def executar_recurso(self):
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
         self.open()
         self.exe_login()
         self.exe_caminho()
+
+        diretorio = kwargs.get('diretorio')
+
+        lista_de_planilhas: list[str] = [
+            f'{diretorio}\\{arquivo}'
+            for arquivo in os.listdir(diretorio)
+            if arquivo.endswith('.xlsx')
+            ]
         
-        for planilha in self.lista_de_planilhas:
+        for planilha in lista_de_planilhas:
             sem_extensao = planilha.replace('.xlsx', '')
 
             if "Enviado" in planilha or "Sem_Pagamento" in planilha:

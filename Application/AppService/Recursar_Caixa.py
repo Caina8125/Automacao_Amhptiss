@@ -1,31 +1,17 @@
-from tkinter import filedialog
-import tkinter.messagebox
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
 from openpyxl import load_workbook
 import pandas as pd
 import time
 import os
-from selenium.webdriver.chrome.options import Options
-from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
-    usuario = (By.XPATH, '//*[@id="UserName"]')
-    senha = (By.XPATH, '//*[@id="Password"]')
-    acessar = (By.XPATH, '//*[@id="LoginButton"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        self.driver.find_element(*self.acessar).click()
-
 class RecursoCaixa(PageElement):
+    usuario_input = (By.XPATH, '//*[@id="UserName"]')
+    senha_input = (By.XPATH, '//*[@id="Password"]')
+    acessar = (By.XPATH, '//*[@id="LoginButton"]')
     reapresentacao = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[7]')
     reapresentar_peg = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[7]/ul/li[1]')
     lista_excel = []
@@ -46,6 +32,19 @@ class RecursoCaixa(PageElement):
     n_protocolo = (By.XPATH, '/html/body/div[1]/div/div/div[2]/div/div')
     botao_ok_enviar = (By.XPATH, '/html/body/div[1]/div/div/div[3]/button[2]')
 
+    def __init__(self, url, usuario, senha):
+        super().__init__(url)
+        self.usuario_input = usuario
+        self.senha_input = senha
+
+    def exe_login(self):
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        time.sleep(1)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(1)
+        self.driver.find_element(*self.acessar).click()
+        time.sleep(1)
+
     def caminho(self):
         self.driver.implicitly_wait(30)
         self.driver.find_element(*self.reapresentacao).click()
@@ -53,7 +52,7 @@ class RecursoCaixa(PageElement):
         self.driver.find_element(*self.reapresentar_peg).click()
         time.sleep(2)
     
-    def arquivos(self):
+    def arquivos(self, pasta):
         nomesarquivos = os.listdir(pasta)
         for nome in nomesarquivos:
             if ".~lock" in nome:
@@ -63,6 +62,7 @@ class RecursoCaixa(PageElement):
 
     def entrar_protocolo(self, planilha):
         df_protocolo = pd.read_excel(planilha)
+
         for index, linha in df_protocolo.iterrows():
             protocolo = f"{linha['Protocolo Aceite']}".replace('.0', '')
             self.driver.find_element(*self.pesq_recurso).send_keys(protocolo)
@@ -203,23 +203,30 @@ class RecursoCaixa(PageElement):
 
         time.sleep(1)
 
-    def fazer_recurso(self):
-        #try:
+    def inicia_automacao(self, **kwargs):
+        diretorio = kwargs.get('diretorio')
+
+        self.open()
+        self.exe_login()
         self.caminho()
-        self.arquivos()
-        renomear = False
+        self.arquivos(diretorio)
+        
         for planilha in self.lista_excel:
             if "Enviado" in planilha:
                 print("PEG já enviado")
                 continue
+
             df_recurso = pd.read_excel(planilha)
             self.entrar_protocolo(planilha)     
             time.sleep(1)
             count = 0
+
             for index, linha in df_recurso.iterrows():
                 count += 1
+
                 if (f"{linha['Recursado no Portal']}") == "Sim":
                     continue
+                
                 self.tabela_site()
                 global quantidade_fatura
                 quantidade_fatura = len(df_fatura)
@@ -283,41 +290,3 @@ class RecursoCaixa(PageElement):
             self.driver.get('https://saude.caixa.gov.br/PORTALPRD/saude/a/portal/prestador/recursosglosaprestador.aspx?i=PORTAL_RECURSARGLOSA&m=MENU_RECURSODEGLOSA_AGRUPADO')
             self.driver.find_element(*self.pesq_recurso).clear()
         self.driver.quit()
-#---------------------------------------------------------------------------------------------------------------------------------
-def recursar_caixa(user, password):
-    global pasta
-    pasta = filedialog.askdirectory()
-
-    global url
-    url = 'https://saude.caixa.gov.br/PORTALPRD/'
-
-    chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument('--ignore-certificate-errors')
-    chrome_options.add_argument('--ignore-ssl-errors')
-
-    options = {
-    'proxy': {
-            'http': f'http://{user}:{password}@10.0.0.230:3128',
-            'https': f'http://{user}:{password}@10.0.0.230:3128'
-        }
-    }
-    try:
-        servico = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=servico, seleniumwire_options=options, options=chrome_options)
-    except:
-        driver = webdriver.Chrome(seleniumwire_options=options, options=chrome_options)
-
-    try:
-        login_page = Login(driver, url)
-        login_page.open()
-
-        login_page.exe_login(
-            usuario = "00735860000173",
-            senha = "!Saude2024"
-        )
-        RecursoCaixa(driver, url).fazer_recurso()
-        tkinter.messagebox.showinfo( 'Automação Saúde Caixa Recurso de Glosa' , 'Recursos do Saúde Caixa Concluídos 😎✌' )
-    except Exception as e:
-        tkinter.messagebox.showerror( 'Erro Automação' , f'Ocorreu uma excessão não tratada \n {e.__class__.__name__}: {e}' )
-        driver.quit()

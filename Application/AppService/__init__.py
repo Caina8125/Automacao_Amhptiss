@@ -19,7 +19,7 @@ from .leitor_de_pdf_gama import PDFReader
 #__________________________________________________________________
 
 #Facil_________________________________________________________________________
-from .classes.fascal import Facil
+from .classes.facil import Facil
 from .recursar_brb import RecursoBrb
 from .recursar_evida import RecursoEvida
 from .recursar_real_grandeza import RecursoReal
