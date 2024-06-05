@@ -1,33 +1,31 @@
-from tkinter import filedialog
 import tkinter.messagebox
 from selenium.webdriver.common.by import By
-from selenium import webdriver
 import pandas as pd
 import time
 import os
-from selenium.webdriver.chrome.options import Options
-from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-import json
 import shutil
 import tkinter.messagebox
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
-    usuario = (By.XPATH, '//*[@id="UserName"]')
-    senha = (By.XPATH, '//*[@id="Password"]')
+class BaixarDemonstrativosCaixa(PageElement):
+    usuario_input = (By.XPATH, '//*[@id="UserName"]')
+    senha_input = (By.XPATH, '//*[@id="Password"]')
     acessar = (By.XPATH, '//*[@id="LoginButton"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        self.driver.find_element(*self.acessar).click()
-
-class Caminho(PageElement):
     demonstrativos = (By.XPATH, '//*[@id="sidebar_demonstrativos"]')
     demonst_analise_de_conta = (By.XPATH, '//*[@id="ctl00_SidebarMenu"]/li[6]/ul/li[1]/a')
+    numero_do_protocolo = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_PageControl_GERAL_GERAL_NUMEROPROTOCOLO"]')
+    emitir_relatorio = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_toolbar"]/a[1]')
+    mensagem = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_MsgUser_message"]')
+
+    def __init__(self, url, usuario, senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        self.driver.find_element(*self.acessar).click()
 
     def exe_caminho(self):
         self.driver.implicitly_wait(30)
@@ -35,13 +33,14 @@ class Caminho(PageElement):
         time.sleep(2)
         self.driver.find_element(*self.demonst_analise_de_conta).click()
         time.sleep(2)
-
-class BaixarDemonstrativosCaixa(PageElement):
-    numero_do_protocolo = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_PageControl_GERAL_GERAL_NUMEROPROTOCOLO"]')
-    emitir_relatorio = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_toolbar"]/a[1]')
-    mensagem = (By.XPATH, '//*[@id="ctl00_Main_DEMONSTRATIVODEANLISEDECONTA_MsgUser_message"]')
-
-    def baixar_demonstrativos(self, planilha):
+    
+    def baixar_demonstrativos(self, **kwargs):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+        
+        planilha = kwargs.get('arquivo')
         df = pd.read_excel(planilha, header=5)
         df = df.iloc[:-1]
         df = df.dropna()
@@ -159,70 +158,3 @@ class BaixarDemonstrativosCaixa(PageElement):
                     break
                 
                 self.driver.refresh()
-
-
-#-------------------------------------------------------------------------------------------------------------------------
-
-def demonstrativo_caixa(user, password):
-    try:
-        planilha = filedialog.askopenfilename()
-
-        global url
-        url = 'https://saude.caixa.gov.br/PORTALPRD/'
-        settings = {
-        "recentDestinations": [{
-                "id": "Save as PDF",
-                "origin": "local",
-                "account": "",
-            }],
-            "selectedDestinationId": "Save as PDF",
-            "version": 2
-        }
-
-        chrome_options = Options()
-        chrome_options.add_experimental_option('prefs', {
-            "printing.print_to_pdf": True,
-            "download.default_directory": r"\\10.0.0.239\automacao_financeiro\SAUDE CAIXA\Renomear",
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": 'false',
-            "safebrowsing.disable_download_protection,": True,
-            "safebrowsing_for_trusted_sources_enabled": False,
-            "plugins.always_open_pdf_externally": True,
-            "printing.print_preview_sticky_settings.appState": json.dumps(settings),
-            "savefile.default_directory": r"\\10.0.0.239\automacao_financeiro\SAUDE CAIXA"
-    })
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-        chrome_options.add_argument('--kiosk-printing')
-
-        options = {
-        'proxy': {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options=options, options=chrome_options)
-        except:
-            driver = webdriver.Chrome(seleniumwire_options=options, options=chrome_options)
-
-        login_page = Login(driver, url)
-        login_page.open()
-
-        login_page.exe_login(
-            usuario = "00735860000173",
-            senha = "!Saude2024"
-        )
-        Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativosCaixa(driver, url).baixar_demonstrativos(planilha)
-
-    except FileNotFoundError as err:
-        tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-    driver.quit()

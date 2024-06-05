@@ -1,39 +1,42 @@
-from tkinter import filedialog
 import pandas as pd
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import tkinter
 import os
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
+class BaixarDemonstrativoEvida(PageElement):
     prestador_pf = (By.XPATH, '//*[@id="tipoAcesso"]/option[6]')
-    usuario = (By.XPATH, '//*[@id="login-entry"]')
-    senha = (By.XPATH, '//*[@id="password-entry"]')
+    usuario_input = (By.XPATH, '//*[@id="login-entry"]')
+    senha_input = (By.XPATH, '//*[@id="password-entry"]')
     entrar = (By.XPATH, '//*[@id="BtnEntrar"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.find_element(*self.prestador_pf).click()
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        self.driver.find_element(*self.entrar).click()
-        time.sleep(5)
-
-class Caminho(PageElement):
     faturas = (By.XPATH, '//*[@id="menuPrincipal"]/div/div[11]/a')
     relatorio_de_faturas = (By.XPATH, '/html/body/header/div[4]/div/div/div/div[11]/div[1]/div[2]/div/div[2]/div/div/div/div[1]/a')
     iframe = (By.XPATH, '/html/body/div[6]/iframe[4]')
     fechar_chat = (By.XPATH, '/html/body/div/div/div/div[2]')
     fechar_modal = (By.XPATH, '/html/body/div[3]/button[1]')
+    lote = (By.XPATH, '//*[@id="txtLote"]')
+    pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
+    ver_xml = (By.XPATH, '//*[@id="div-Servicos"]/div[1]/div[4]/div/div/div[1]/div/div[2]/a[2]')
+    radio_button = (By.XPATH, '//*[@id="divEscolhaProtocoloXml"]/div/input')
+    exportar_todos = (By.XPATH, '//*[@id="escolha-protocolo-modal"]/div/div/div[3]/button[2]')
+    salvar = (By.XPATH, '//*[@id="btn-salxar-xml-servico"]')
+    fechar = (By.XPATH, '//*[@id="operation-modal"]/div/div/div[3]/button[2]')
+    botao_ok = (By.XPATH, '//*[@id="button-0"]')
+    detalhes_da_fatura = (By.XPATH, '/html/body/main/div/div[1]/div[4]/div/div/div[1]/div/div[2]/a[1]/i')
+    relatorio_de_servico = (By.XPATH, '/html/body/main/div/div[1]/div[4]/div/div/div[3]/div[2]/div[1]/div[2]/input[4]')
+
+    def __init__(self, url, usuario,senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.find_element(*self.prestador_pf).click()
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        self.driver.find_element(*self.entrar).click()
+        time.sleep(5)
 
     def exe_caminho(self):
         try:
@@ -43,7 +46,7 @@ class Caminho(PageElement):
         except:
             self.driver.refresh()
             time.sleep(2)
-            login_page.exe_login(usuario, senha)
+            self.exe_login()
 
         self.driver.implicitly_wait(30)
         time.sleep(20)
@@ -67,19 +70,14 @@ class Caminho(PageElement):
         except:
             pass
 
-class BaixarDemonstrativoEvida(PageElement):
-    lote = (By.XPATH, '//*[@id="txtLote"]')
-    pesquisar = (By.XPATH, '//*[@id="filtro"]/div[2]/div[2]/button')
-    ver_xml = (By.XPATH, '//*[@id="div-Servicos"]/div[1]/div[4]/div/div/div[1]/div/div[2]/a[2]')
-    radio_button = (By.XPATH, '//*[@id="divEscolhaProtocoloXml"]/div/input')
-    exportar_todos = (By.XPATH, '//*[@id="escolha-protocolo-modal"]/div/div/div[3]/button[2]')
-    salvar = (By.XPATH, '//*[@id="btn-salxar-xml-servico"]')
-    fechar = (By.XPATH, '//*[@id="operation-modal"]/div/div/div[3]/button[2]')
-    botao_ok = (By.XPATH, '//*[@id="button-0"]')
-    detalhes_da_fatura = (By.XPATH, '/html/body/main/div/div[1]/div[4]/div/div/div[1]/div/div[2]/a[1]/i')
-    relatorio_de_servico = (By.XPATH, '/html/body/main/div/div[1]/div[4]/div/div/div[3]/div[2]/div[1]/div[2]/input[4]')
+    def inicia_automacao(self, **kwargs):
+        planilha = kwargs.get('arquivo')
 
-    def baixar_demonstrativo(self, planilha):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
         df = pd.read_excel(planilha, header=5)
         df = df.iloc[:-1]
         df = df.dropna()
@@ -184,57 +182,5 @@ class BaixarDemonstrativoEvida(PageElement):
             except Exception as err:
                 print(err)
                 self.driver.get(self.url)
-                login_page.exe_login(usuario, senha)
-                caminho.exe_caminho()
-                
-#--------------------------------------------------------------------------------------------------------------------
-
-def demonstrativo_evida(user, password):
-    try:
-        tkinter.messagebox.showinfo( 'Demonstrativos E-Vida' , f"Aguarde efetuar o login e clique em 'Ok' caso apareça um alerta." )
-        url = 'https://novowebplanevida.facilinformatica.com.br/GuiasTISS/Logon'
-        planilha = filedialog.askopenfilename()
-
-        options = {
-            'proxy' : {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-
-        chrome_options = Options()
-        chrome_options.add_experimental_option('prefs', {
-            "download.default_directory": r"\\10.0.0.239\automacao_financeiro\E-VIDA",
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "plugins.always_open_pdf_externally": True,
-            "safebrowsing.enabled": 'false',
-            "safebrowsing.disable_download_protection,": True,
-            "safebrowsing_for_trusted_sources_enabled": False,
-    })
-        chrome_options.add_argument("--start-maximized")
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
-        except:
-            driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options)
-        
-        global usuario, senha, login_page, caminho
-        usuario = "00735860000173"
-        senha = "00735860000173"
-
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(usuario, senha)
-
-        caminho = Caminho(driver, url)
-        caminho.exe_caminho()
-        BaixarDemonstrativoEvida(driver, url).baixar_demonstrativo(planilha)
-
-    except FileNotFoundError as err:
-        tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-    driver.quit()
+                self.exe_login()
+                self.exe_caminho()

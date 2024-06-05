@@ -1,34 +1,15 @@
-from tkinter import filedialog
 import pandas as pd
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import os
 import tkinter
-import json
 import shutil
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
-    usuario = (By.XPATH, '//*[@id="username"]')
-    senha = (By.XPATH, '//*[@id="password"]')
+class BaixarDemonstrativoCasembrapa(PageElement):
+    usuario_input = (By.XPATH, '//*[@id="username"]')
+    senha_input = (By.XPATH, '//*[@id="password"]')
     entrar = (By.XPATH, '//*[@id="submit-login"]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.implicitly_wait(30)
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        time.sleep(2)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(2)
-        self.driver.find_element(*self.entrar).click()
-        time.sleep(2)
-
-class Caminho(PageElement):
     salutis = (By.XPATH, '//*[@id="menuButtons"]/td[1]')
     websaude = (By.XPATH, '//*[@id="divTreeNavegation"]/div[7]/span[2]')
     credenciados = (By.XPATH, '//*[@id="divTreeNavegation"]/div[8]/span[2]')
@@ -36,6 +17,32 @@ class Caminho(PageElement):
     demonstrativos_de_analise = (By.XPATH, '//*[@id="divTreeNavegation"]/div[13]/span[2]')
     numero_dos_lotes_prestador = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/textarea')
     numero_dos_protocolos = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/textarea')
+    salutis = (By.XPATH, '//*[@id="menuButtons"]/td[1]')
+    numero_dos_lotes_prestador = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/textarea')
+    numero_dos_lotes_operadora1 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/textarea')
+    numero_dos_lotes_operadora2 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/textarea')
+    numero_dos_protocolos = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/textarea')
+    numero_dos_protocolos2 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[9]/td[2]/table/tbody/tr/td[1]/textarea')
+    executar = (By.XPATH, '//*[@id="buttonsContainer_1"]/td[1]/span[2]')
+    imprimir = (By.XPATH, '//*[@id="bt_1892814041"]/table/tbody/tr/td[2]')
+    imprimir_em_texto = (By.XPATH, '//*[@id="buttonsContainer_1"]/td[4]/span[2]')
+    botao_voltar = (By.XPATH, '//*[@id="buttonsCell"]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div')
+    erro = (By.XPATH, '/html/body/div[10]')
+    erro_ok = (By.XPATH, '//*[@id="confirm"]')
+
+    def __init__(self, url, usuario, senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.implicitly_wait(30)
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        time.sleep(2)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(2)
+        self.driver.find_element(*self.entrar).click()
+        time.sleep(2)
 
     def exe_caminho(self):
         self.driver.implicitly_wait(30)
@@ -52,29 +59,20 @@ class Caminho(PageElement):
 
     def refazer_caminho(self):
         self.driver.get(self.url)
-        login_page.exe_login(usuario, senha)
+        self.exe_login()
         self.driver.implicitly_wait(30)
         time.sleep(2)
         self.driver.find_element(*self.salutis).click()
         time.sleep(2)
         self.driver.find_element(By.XPATH, '/html/body/div[8]/div[2]/div[13]/span[2]').click()
 
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
 
-class BaixarDemonstrativoCasembrapa(PageElement):
-    salutis = (By.XPATH, '//*[@id="menuButtons"]/td[1]')
-    numero_dos_lotes_prestador = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/textarea')
-    numero_dos_lotes_operadora1 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[5]/td[2]/table/tbody/tr/td[1]/textarea')
-    numero_dos_lotes_operadora2 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/textarea')
-    numero_dos_protocolos = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[7]/td[2]/table/tbody/tr/td[1]/textarea')
-    numero_dos_protocolos2 = (By.XPATH, '//*[@id="vars"]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td/table/tbody/tr[9]/td[2]/table/tbody/tr/td[1]/textarea')
-    executar = (By.XPATH, '//*[@id="buttonsContainer_1"]/td[1]/span[2]')
-    imprimir = (By.XPATH, '//*[@id="bt_1892814041"]/table/tbody/tr/td[2]')
-    imprimir_em_texto = (By.XPATH, '//*[@id="buttonsContainer_1"]/td[4]/span[2]')
-    botao_voltar = (By.XPATH, '//*[@id="buttonsCell"]/table/tbody/tr/td[1]/table/tbody/tr/td[1]/div')
-    erro = (By.XPATH, '/html/body/div[10]')
-    erro_ok = (By.XPATH, '//*[@id="confirm"]')
-
-    def baixar_demonstrativo(self, planilha):
+        planilha = kwargs.get('arquivo')
         df = pd.read_excel(planilha, header=5)
         df = df.iloc[:-1]
         df = df.dropna()
@@ -232,76 +230,5 @@ class BaixarDemonstrativoCasembrapa(PageElement):
                     tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {error.__class__.__name__} - {error}")
                     break
                 
-                caminho.exe_caminho()
+                self.exe_caminho()
                 contador_vezes = 1
-            
-#--------------------------------------------------------------------------------
-def demonstrativo_casembrapa(user, password):
-    try:
-        global url
-        planilha = filedialog.askopenfilename()
-        url = 'http://170.84.17.131:22101/sistema'
-
-        settings = {
-        "recentDestinations": [{
-                "id": "Save as PDF",
-                "origin": "local",
-                "account": "",
-            }],
-            "selectedDestinationId": "Save as PDF",
-            "version": 2
-        }
-
-        options = {
-            'proxy' : {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-
-        chrome_options = Options()
-        chrome_options.add_experimental_option('prefs', {
-            "printing.print_to_pdf": True,
-            "download.default_directory": r"\\10.0.0.239\automacao_financeiro\CASEMBRAPA",
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": 'false',
-            "safebrowsing.disable_download_protection,": True,
-            "safebrowsing_for_trusted_sources_enabled": False,
-            "plugins.always_open_pdf_externally": True,
-            "printing.print_preview_sticky_settings.appState": json.dumps(settings),
-            "savefile.default_directory": r"\\10.0.0.239\automacao_financeiro\CASEMBRAPA\Renomear"
-    })
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-        chrome_options.add_argument('--kiosk-printing')
-        global driver
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
-
-        except:
-            driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options)
-
-        global usuario, senha
-        usuario = "00735860000173"
-        senha = "0073586@"
-
-        global login_page
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(usuario, senha)
-        global caminho
-        caminho = Caminho(driver, url)
-        caminho.exe_caminho()
-        BaixarDemonstrativoCasembrapa(driver, url).baixar_demonstrativo(planilha)
-        driver.quit()
-    
-    except FileNotFoundError as err:
-        tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        driver.quit()

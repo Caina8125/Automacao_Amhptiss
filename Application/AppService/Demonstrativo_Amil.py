@@ -1,36 +1,14 @@
 import os
 import pandas as pd
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
-import tkinter
-from Application.AppService.Pidgin import financeiroDemo
-import tkinter.messagebox
-import json
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
-    fechar = (By.ID, 'finalizar-walktour')
-    usuario = (By.ID, 'login-usuario')
-    senha = (By.ID, 'login-senha')
-    entrar = (By.XPATH, '/html/body/as-main-app/as-login-container/div[1]/div/as-login/div[2]/form/fieldset/button')
-
-    def exe_login(self, usuario, senha):
-        self.driver.implicitly_wait(30)
-        self.driver.find_element(*self.fechar).click()
-        time.sleep(2)
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        time.sleep(2)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(2)
-        self.driver.find_element(*self.entrar).click()
-        time.sleep(5)
-
 class BaixarDemonstrativoAmil(PageElement):
+    fechar = (By.ID, 'finalizar-walktour')
+    usuario_input = (By.ID, 'login-usuario')
+    senha_input = (By.ID, 'login-senha')
+    entrar = (By.XPATH, '/html/body/as-main-app/as-login-container/div[1]/div/as-login/div[2]/form/fieldset/button')
     amil_logo = (By.XPATH, '/html/body/as-main-app/as-comunicado-detalhe/as-base-layout/as-header-container/header/div/h1/a')
     acesso_sis_amil = (By.XPATH, '/html/body/as-main-app/as-comunicado-detalhe/as-base-layout/section/div/as-navbar/nav/div[2]/form/button')
     menu = (By.XPATH, '/html/body/div[2]/div[3]/div')
@@ -43,6 +21,22 @@ class BaixarDemonstrativoAmil(PageElement):
     xml = (By.XPATH, '/html/body/div/span[3]/img')
     voltar = (By.XPATH, '/html/body/div/span[1]/img')
 
+    def __init__(self, url, usuario, senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.implicitly_wait(30)
+        self.driver.find_element(*self.fechar).click()
+        time.sleep(2)
+        self.driver.find_element(*self.usuario_input).send_keys(self.usuario)
+        time.sleep(2)
+        self.driver.find_element(*self.senha_input).send_keys(self.senha)
+        time.sleep(2)
+        self.driver.find_element(*self.entrar).click()
+        time.sleep(5)
+    
     def exe_caminho(self):
         self.driver.implicitly_wait(30)
         self.driver.find_element(*self.amil_logo)
@@ -73,6 +67,11 @@ class BaixarDemonstrativoAmil(PageElement):
         time.sleep(2)
 
     def baixar_demonstrativo(self):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+        
         tabela = self.driver.find_element(*self.table).get_attribute('outerHTML')
         tabela = pd.read_html(tabela)[0]
         tamanho_tabela = len(tabela)
@@ -116,64 +115,3 @@ class BaixarDemonstrativoAmil(PageElement):
                 self.driver.switch_to.default_content()
                 time.sleep(2)
                 self.driver.switch_to.frame('principal')
-
-def demonstrativo_amil(user, password):
-    try:
-        url = 'https://credenciado.amil.com.br/institucional/comunicados/53050'
-        settings = {
-        "recentDestinations": [{
-                "id": "Save as PDF",
-                "origin": "local",
-                "account": "",
-            }],
-            "selectedDestinationId": "Save as PDF",
-            "version": 2
-        }
-
-        options = {
-            'proxy' : {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-
-        chrome_options = Options()
-        chrome_options.add_experimental_option('prefs', {
-            "printing.print_to_pdf": True,
-            "download.default_directory": r"\\10.0.0.239\automacao_financeiro\AMIL",
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": 'false',
-            "safebrowsing.disable_download_protection,": True,
-            "safebrowsing_for_trusted_sources_enabled": False,
-            "plugins.always_open_pdf_externally": True,
-            "printing.print_preview_sticky_settings.appState": json.dumps(settings),
-            "savefile.default_directory": r"\\10.0.0.239\automacao_financeiro\AMIL"
-    })
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-        chrome_options.add_argument('--kiosk-printing')
-
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
-
-        except:
-            driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options)
-
-        usuario = '10019642'
-        senha = 'Amhpdf2024'
-
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(usuario, senha)
-        BaixarDemonstrativoAmil(driver, url).exe_caminho()
-        BaixarDemonstrativoAmil(driver, url).baixar_demonstrativo()
-        driver.quit()
-        tkinter.messagebox.showinfo('Automação', 'Downloads concluídos com sucesso!')
-
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        driver.quit()

@@ -4,29 +4,16 @@ import shutil
 import tkinter
 import pandas as pd
 import tkinter.messagebox
-from selenium import webdriver
-from tkinter import filedialog
-from seleniumwire import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
 
-class Login(PageElement):
-    email = (By.XPATH, '//*[@id="Email"]')
-    senha = (By.XPATH, '//*[@id="Senha"]')
-    logar = (By.XPATH, '//*[@id="btnLogin"]')
-
-    def exe_login(self, email, senha):
-        # caminho().Alert()
-        self.driver.find_element(*self.email).send_keys(email)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        self.driver.find_element(*self.logar).click()
-
 class BaixarDemonstrativoFapes(PageElement):
+    email = (By.XPATH, '//*[@id="Email"]')
+    senha_input = (By.XPATH, '//*[@id="Senha"]')
+    logar = (By.XPATH, '//*[@id="btnLogin"]')
     demonstrativo        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/a/span[1]')
     analise_conta        = (By.XPATH, '//*[@id="sidebar-menu"]/li[24]/ul/li[3]/a/span')
     selecionar_convenio  = (By.XPATH, '//*[@id="s2id_OperadorasCredenciadas_HandleOperadoraSelected"]/a/span[2]/b')
@@ -38,19 +25,37 @@ class BaixarDemonstrativoFapes(PageElement):
     fechar_alerta        = (By.XPATH, '/html/body/bc-modal-evolution/div/div/div/div[3]/button[3]')
     erro                 = False
 
+    def __init__(self, url, usuario, senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        # caminho().Alert()
+        self.driver.find_element(*self.email).send_keys(self.usuario)
+        self.driver.find_element(*self.senha).send_keys(self.senha)
+        self.driver.find_element(*self.logar).click()
+    
     def exe_caminho(self):
         time.sleep(1)
         self.driver.find_element(*self.demonstrativo).click()
         time.sleep(1)
         self.driver.find_element(*self.analise_conta).click()
         time.sleep(2)
-        BaixarDemonstrativoFapes(driver, url).Alert()
+        self.Alert()
         self.driver.find_element(*self.selecionar_convenio).click()
         time.sleep(1)
         self.driver.find_element(*self.opcao_fapes).click()
         time.sleep(1)
 
-    def buscar_demonstrativo(self):
+    def inicia_automacao(self, **kwargs):
+        planilha = kwargs.get('arquivo')
+
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
         df = pd.read_excel(planilha, header=5)
         df = df.iloc[:-1]
         df = df.dropna()
@@ -165,63 +170,3 @@ class BaixarDemonstrativoFapes(PageElement):
         except:
             print("Não teve Modal")
             pass
-
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-def demonstrativo_fapes(user, password):
-
-    try:
-        global planilha
-        global driver
-        global url
-
-        chrome_options = Options()
-
-        chrome_options.add_experimental_option('prefs', { "download.default_directory": r"\\10.0.0.239\automacao_financeiro\FAPES\Renomear",
-                                                "download.prompt_for_download": False,
-                                                "download.directory_upgrade": True,
-                                                "plugins.always_open_pdf_externally": True,
-                                                "safebrowsing.enabled": 'false',
-                                                "safebrowsing.disable_download_protection,": True,
-                                                "safebrowsing_for_trusted_sources_enabled": False,
-                                                })
-        
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-        chrome_options.add_argument('--kiosk-printing')
-
-        url = 'https://portalconectasaude.com.br/Account/Login'
-        
-        planilha = filedialog.askopenfilename()
-
-        proxy = {
-        'proxy': {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-
-        driver = webdriver.Chrome(seleniumwire_options=proxy, options=chrome_options)
-
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(
-            email="negociacao.gerencia@amhp.com.br",
-            senha="Amhp@0073"
-        )
-
-        print('Pegar Alerta Acionado!')
-        BaixarDemonstrativoFapes(driver, url).Alert()
-
-        
-        BaixarDemonstrativoFapes(driver, url).exe_caminho()
-
-        BaixarDemonstrativoFapes(driver, url).buscar_demonstrativo()
-
-    except FileNotFoundError as err:
-        tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-    driver.quit()

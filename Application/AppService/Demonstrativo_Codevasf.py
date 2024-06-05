@@ -1,50 +1,18 @@
-from tkinter import filedialog
 import pandas as pd
-from selenium import webdriver
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import os
 import tkinter
-import json
-from Application.AppService.Pidgin import financeiroDemo
 from Application.AppService.page_element import PageElement
 
-class Login(PageElement):
+class BaixarDemonstrativoCodevasf(PageElement):
     prestador = (By.XPATH, '/html/body/div[1]/div[10]/div[1]/ul/li[2]/ul/li[2]/h2')
     cnpj = (By.XPATH, '//*[@id="login-prestador"]/label[2]/input')
     usuario = (By.XPATH, '//*[@id="pssTpField"]')
     senha = (By.XPATH, '/html/body/div[1]/div[10]/div[1]/ul/li[2]/ul/li[2]/ul/div/form/input[4]') 
     entrar = (By.XPATH, '//*[@id="login-prestador"]/input[5]')
-
-    def exe_login(self, usuario, senha):
-        self.driver.implicitly_wait(30)
-        self.driver.find_element(*self.prestador).click()
-        time.sleep(2)
-        self.driver.find_element(*self.cnpj).click()
-        time.sleep(2)
-        self.driver.find_element(*self.usuario).send_keys(usuario)
-        time.sleep(2)
-        self.driver.find_element(*self.senha).send_keys(senha)
-        time.sleep(2)
-        self.driver.find_element(*self.entrar).click()
-        time.sleep(2)
-
-class Caminho(PageElement):
     tiss = (By.XPATH, '//*[@id="portal_salutis"]/div[1]/div[10]/div[2]/ul/li[3]/a/ul/li[2]/h2')
     demonstrativo_de_analise = (By.XPATH, '//*[@id="portal_salutis"]/div[1]/div[11]/div[7]/article/div[1]/a[1]')
-    
-    def exe_caminho(self):
-        self.driver.implicitly_wait(30)
-        self.driver.find_element(*self.tiss).click()
-        time.sleep(2)
-        self.driver.find_element(*self.demonstrativo_de_analise).click()
-        time.sleep(2)
-
-class BaixarDemonstrativoCodevasf(PageElement):
     botao_numero_do_lote = (By.XPATH, '//*[@id="_up_ui_form"]/label[2]/input')
     botao_numero_do_protocolo = (By.XPATH, '//*[@id="_up_ui_form"]/label[1]/input')
     inserir_numero_do_lote = (By.XPATH, '//*[@id="lote"]') 
@@ -53,7 +21,40 @@ class BaixarDemonstrativoCodevasf(PageElement):
     imprimir = (By.XPATH, '/html/body/div/input')
     corpo_do_html = (By.XPATH, '/html/body')
 
-    def baixar_demonstrativo(self, planilha):
+    def __init__(self, url, usuario,senha) -> None:
+        super().__init__(url)
+        self.usuario = usuario
+        self.senha = senha
+
+    def exe_login(self):
+        self.driver.implicitly_wait(30)
+        self.driver.find_element(*self.prestador).click()
+        time.sleep(2)
+        self.driver.find_element(*self.cnpj).click()
+        time.sleep(2)
+        self.driver.find_element(*self.usuario).send_keys(self.usuario)
+        time.sleep(2)
+        self.driver.find_element(*self.senha).send_keys(self.senha)
+        time.sleep(2)
+        self.driver.find_element(*self.entrar).click()
+        time.sleep(2)
+    
+    def exe_caminho(self):
+        self.driver.implicitly_wait(30)
+        self.driver.find_element(*self.tiss).click()
+        time.sleep(2)
+        self.driver.find_element(*self.demonstrativo_de_analise).click()
+        time.sleep(2)
+    
+
+    def inicia_automacao(self, **kwargs):
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
+
+        planilha = kwargs.get('arquivo')
+
         time.sleep(2)
         df = pd.read_excel(planilha, header=5)
         df = df.iloc[:-1]
@@ -162,71 +163,3 @@ class BaixarDemonstrativoCodevasf(PageElement):
                     break
                 
                 self.driver.get('https://portal.salutis.com.br/index.asp?operadora=codevasf&pag=solicita_demo_tiss&type=arel')
-
-#_________________________________________________________________________________________________________
-
-def demonstrativo_codevasf(user, password):
-    try:
-        planilha = filedialog.askopenfilename()
-        url = 'https://portal.salutis.com.br/index.asp?operadora=codevasf'
-
-        settings = {
-        "recentDestinations": [{
-                "id": "Save as PDF",
-                "origin": "local",
-                "account": "",
-            }],
-            "selectedDestinationId": "Save as PDF",
-            "version": 2
-        }
-
-        options = {
-            'proxy' : {
-                'http': f'http://{user}:{password}@10.0.0.230:3128',
-                'https': f'http://{user}:{password}@10.0.0.230:3128'
-            }
-        }
-
-        chrome_options = Options()
-        chrome_options.add_experimental_option('prefs', {
-            "printing.print_to_pdf": True,
-            "download.default_directory": r"\\10.0.0.239\automacao_financeiro\CODEVASF",
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": 'false',
-            "safebrowsing.disable_download_protection,": True,
-            "safebrowsing_for_trusted_sources_enabled": False,
-            "plugins.always_open_pdf_externally": True,
-            "printing.print_preview_sticky_settings.appState": json.dumps(settings),
-            "savefile.default_directory": r"\\10.0.0.239\automacao_financeiro\CODEVASF"
-    })
-        chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
-        chrome_options.add_argument('--kiosk-printing')
-        
-        try:
-            servico = Service(ChromeDriverManager().install())
-            driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
-
-        except:
-            print('except')
-            driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options)
-
-        global usuario, senha
-        usuario = "00735860000173"
-        senha = '131912051' #int(input('Digite a senha: '))
-
-        global login_page
-        login_page = Login(driver, url)
-        login_page.open()
-        login_page.exe_login(usuario, senha)
-        Caminho(driver, url).exe_caminho()
-        BaixarDemonstrativoCodevasf(driver, url).baixar_demonstrativo(planilha)
-    
-    except FileNotFoundError as err:
-        tkinter.messagebox.showerror('Automação', f'Nenhuma planilha foi selecionada!')
-    
-    except Exception as err:
-        tkinter.messagebox.showerror("Automação", f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
-        financeiroDemo(f"Ocorreu uma exceção não tratada. \n {err.__class__.__name__} - {err}")
