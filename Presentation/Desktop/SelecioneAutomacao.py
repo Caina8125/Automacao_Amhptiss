@@ -8,7 +8,7 @@ from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
 from Application import AppService
 import time
 
-from Presentation.Desktop.SelecionarPasta import TelaSelecionarPasta
+from Presentation.Desktop.SelecaoUmaPasta import SelecaoUmaPasta
 
 
 class TelaSelecioneAutomacoes:
@@ -64,7 +64,7 @@ class TelaSelecioneAutomacoes:
 
         match automacaoSelecionada:
             case "Faturamento - Anexar Guia Geap":
-                TelaSelecionarPasta(self.tela, AppService.AnexarGuiaGeap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'))
+                SelecaoUmaPasta(self.tela, AppService.AnexarGuiaGeap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'))
 
             case "Faturamento - Conferência de Protocolos":
                 ...
@@ -193,7 +193,8 @@ class TelaSelecioneAutomacoes:
                 ...
 
             case "Glosa - Recursar BRB":
-                TelaSelecionarPasta(janela=self.tela, funcao=print)
+                
+                SelecaoUmaPasta(self.tela, AppService.RecursoBrb('https://portal.saudebrb.com.br/GuiasTISS/Logon', '00735860000173', 'AMHP7356!'))
 
             case "Glosa - Recursar Casembrapa":
                 ...
