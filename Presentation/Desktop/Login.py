@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 from itertools import count, cycle
 from Presentation.Desktop.Gif import ImageLabel
 from Presentation.Desktop.SelecioneAutomacao import TelaSelecioneAutomacoes
-import Application.AppService.AutenticacaoAppService as AuhtAppService
+import Application.AppService.AutomacaoService.AutenticacaoAppService as AuhtAppService
 
 class Login:
     def __init__(self, janela,corTema):

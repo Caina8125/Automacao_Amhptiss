@@ -6,13 +6,17 @@ import Application.AppService.ChamarTabelaAppService as Tabela
 import Application.AppService.ObterAutomacaoSetorAppService as AutomacoesAppService
 from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
 from Application import AppService
+import Application.AppService.AutomacaoService as automacoes
 import time
+import tkinter as tk
 
 from Presentation.Desktop.SelecaoUmaPasta import SelecaoUmaPasta
 
 
-class TelaSelecioneAutomacoes:
+class TelaSelecioneAutomacoes(tk.Frame):
     def __init__(self, setorUsuario, janela,token):
+        super().__init__(janela)
+        self.setorUsuario = setorUsuario
         self.tela = janela
         # self.bottonSair(self.tela)
         self.modoEscuroAut()
@@ -64,7 +68,7 @@ class TelaSelecioneAutomacoes:
 
         match automacaoSelecionada:
             case "Faturamento - Anexar Guia Geap":
-                SelecaoUmaPasta(self.tela, AppService.AnexarGuiaGeap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'))
+                telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.Geap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'),codigoConvenio=225, setor=self.setorUsuario)
 
             case "Faturamento - Conferência de Protocolos":
                 ...
@@ -82,10 +86,10 @@ class TelaSelecioneAutomacoes:
                 ...
 
             case "Faturamento - Enviar PDF BRB":
-                telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=10)
+                telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.EnviarPdf(),codigoConvenio=10, setor=self.setorUsuario)
 
             case "Faturamento - Enviar PDF GDF":
-                telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=433)
+                telaTabelaFaturas(janela=self.tela,token=token,nomeAutomacao=automacaoSelecionada,codigoConvenio=433, setor=self.setorUsuario)
 
             case "Faturamento - Enviar XML Bacen":
                 ...

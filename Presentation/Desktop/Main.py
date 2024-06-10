@@ -1,13 +1,21 @@
 import customtkinter
 from Presentation.Desktop.Login import Login
 from Presentation.Desktop.TesteAwait import chamada_assincrona
+import tkinter as tk
 
-class Aplication:
+class Aplication(tk.Tk):
     def __init__(self):
         self.corAtual = "light"
         customtkinter.set_appearance_mode(self.corAtual)
         self.janela = customtkinter.CTk()
         self.janela.geometry("640x480")
+
+        container = tk.Frame(self)
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        
         self.janela.title("AMHP - Automações")
         self.janela.iconbitmap(r"Infra\Arquivos\Robo.ico")
         self.janela.resizable(width=False, height=False)

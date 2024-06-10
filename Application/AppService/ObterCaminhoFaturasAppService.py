@@ -4,7 +4,7 @@ import Infra.Repository.GuiasEscaneadasRepository as GuiasEscaneadas
 def TrasformarDataFrame(lista):
     try:
         df = pd.DataFrame(lista)
-        df.columns = ["Fatura", "Remessa", "Convenio","Usuario"]
+        df.columns = ["Fatura", "Remessa", "Convenio","Usuario", "Protocolo"]
         return df
     except Exception as e:
         print(e)
@@ -20,11 +20,14 @@ def ObterCaminhosFaturaUsuario(dataFrame,codigoConvenio):
         match codigoConvenio:
             case 10:
                 caminho = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
-                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"")
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"", codigoConvenio)
             case 433:
                 caminho = r"\\10.0.0.239\guiasscaneadas\2024\GDF"
                 variavelFatura = "LOTE "
-                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"")
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"", codigoConvenio)
+            case 225:
+                caminho = r"\\10.0.0.239\guiasscaneadas\2024\GEAP"
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho,"", codigoConvenio)
         
 
 def IniciarBusca(lista,codigoConvenio):
