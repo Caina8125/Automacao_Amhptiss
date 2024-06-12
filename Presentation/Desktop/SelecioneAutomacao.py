@@ -13,9 +13,9 @@ import tkinter as tk
 from Presentation.Desktop.SelecaoUmaPasta import SelecaoUmaPasta
 
 
-class TelaSelecioneAutomacoes(tk.Frame):
+class TelaSelecioneAutomacoes():
     def __init__(self, setorUsuario, janela,token):
-        super().__init__(janela)
+        super().__init__()
         self.setorUsuario = setorUsuario
         self.tela = janela
         # self.bottonSair(self.tela)
@@ -68,7 +68,7 @@ class TelaSelecioneAutomacoes(tk.Frame):
 
         match automacaoSelecionada:
             case "Faturamento - Anexar Guia Geap":
-                telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.Geap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2023'),codigoConvenio=225, setor=self.setorUsuario)
+                telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.Geap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2024'),codigoConvenio=225, setor=self.setorUsuario)
 
             case "Faturamento - Conferência de Protocolos":
                 ...

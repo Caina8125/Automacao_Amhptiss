@@ -1,11 +1,8 @@
 from datetime import date
 from Application.AppService.AutomacaoService.page_element import PageElement
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from time import sleep
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from seleniumwire import webdriver
 
 class Geap(PageElement):
     acessar_portal = By.XPATH, '/html/body/div[3]/div[3]/div[1]/form/div[1]/div[1]/div/a'
@@ -16,7 +13,7 @@ class Geap(PageElement):
     portal_tiss = (By.XPATH, '/html/body/div[1]/div/div[2]/div/div[1]/div[1]/div[1]/div/div')
     alerta = By.XPATH,' /html/body/div[2]/div/center/a'
     a_tiss = By.XPATH, '/html/body/div[1]/nav/ul/li[3]'
-    anexo_conta = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/ul/li[7]/a'
+    anexo_conta = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/ul/li[5]/a'
     select_mes_referencia = By.ID, 'dropReferencia'
     select_nr = By.ID, 'dropNr'
     select_conta = By.ID, 'dropConta'
@@ -24,6 +21,7 @@ class Geap(PageElement):
     text_area_decricao = By.ID, 'txtAnexoDesc'
     btn_processar = By.ID, 'btnFinalizar'
     input_file = By.XPATH, '/html/body/input[2]'
+    btn_remover_anexos = By.ID, 'clear-dropzone'
 
     def __init__(self, url: str, cpf: str, senha: str) -> None:
         super().__init__(url)
@@ -87,6 +85,19 @@ class Geap(PageElement):
         self.driver.find_element(*self.anexo_conta).click()
         sleep(2)
 
+    def click_option(self, select_tuple, text):
+        select = self.driver.find_element(*select_tuple)
+        option_element = next((
+            option
+            for option in select.find_elements(By.TAG_NAME, 'option')
+            if text in option.text or option.text == text
+        ), None)
+        if option_element:
+            option_element.click()
+            return True
+        else:
+            return False
+
     def inicia_automacao(self, **kwargs):
         self.init_driver()
         self.open()
@@ -96,68 +107,43 @@ class Geap(PageElement):
         setor = kwargs.get('setor')
         dados_remessa = kwargs.get('dados_faturas')
         mes_atual = date.today().strftime('%m/%Y')
-
-        select_mes_referencia_element = self.driver.find_element(*self.select_mes_referencia)
-        select_nr_element = self.driver.find_element(*self.select_nr)
-        select_conta = self.driver.find_element(*self.select_conta)
-        select_tipo_anexo = self.driver.find_element(*self.select_tipo_anexo)
         sleep(1.5)
-
-        option_mes_atual = next((
-            option
-            for option in select_mes_referencia_element.find_elements(By.TAG_NAME, 'option')
-            if option.get_attribute('value') == mes_atual
-        ), None)
 
         for fatura in dados_remessa['faturas']:
             n_processo = fatura['fatura']
             protocolo = fatura['protocolo']
             guias = fatura['lista_guias']
+            self.click_option(self.select_mes_referencia, mes_atual)
 
-            option_fatura = next((
-                option
-                for option in select_nr_element.find_elements(By.TAG_NAME, 'option')
-                if option.text == protocolo
-            ), None)
-
-            if option_fatura == None:
+            if not self.click_option(self.select_nr, protocolo):
                 #TODO não lançar que essa fatura foi enviada
                 ...
             
             for guia_data in guias:
-                option_mes_atual.click()
+                self.click_option(self.select_mes_referencia, mes_atual)
                 sleep(2)
-                option_fatura.click()
+                self.click_option(self.select_nr, protocolo)
                 guia = f"{guia_data['guia']}".replace('.0', '')
                 caminho = guia_data['caminho_guia']
                 sleep(2)
-                option_guia = next((
-                    option
-                    for option in select_conta.find_elements(By.TAG_NAME, 'option')
-                    if option.text == guia
-                ), None)
+                self.click_option(self.select_conta, guia)
 
-                if option_guia == None:
+                if not self.click_option(self.select_conta, guia):
                     raise Exception(f'Guia {guia} não foi encontrada no portal! Por favor, verificar se o número diverge com o que está no portal.')
-
-                option_guia.click()
+                
                 sleep(2)
 
-                
-                option_tipo_anexo = next((
-                    option
-                    for option in select_tipo_anexo.find_elements(By.TAG_NAME, 'option')
-                    if 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)' in option.text
-                ), None)
-
-                # TODO caso for none
-
-                option_tipo_anexo.click()
+                self.click_option(self.select_tipo_anexo, 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)')
                 sleep(2)
 
                 self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
                 sleep(2)
                 self.driver.find_element(*self.input_file).send_keys(caminho)
-                sleep(1.5)
+                sleep(2)
                 self.driver.find_element(*self.btn_processar).click()
-                sleep(1.5)
+                sleep(3)
+                if 'Ocorreu um erro ao salvar os dados' in self.driver.find_element(*self.body).text:
+                    self.driver.find_element(*self.text_area_decricao).clear()
+                    sleep(2)
+                    self.driver.find_element(*self.btn_remover_anexos).click()
+                    sleep(2)

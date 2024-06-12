@@ -55,5 +55,4 @@ def post_status_envio_operadora(self, tipo_negociacao, remessa_id, envio_operado
     }
 
     response = requests.get(url=url_api, headers=headers, data=data, verify=False)
-    content = json.loads(response.content)
-    return content
+    return response.status_code

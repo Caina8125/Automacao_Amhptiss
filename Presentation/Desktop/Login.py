@@ -82,7 +82,7 @@ class Login:
                 tkinter.messagebox.showerror("Erro Autenticação", f"Usuário informado não tem permissão no setor {setor}")
                 self.reiniciarTelaLogin()
 
-        except:
+        except Exception as e:
             tkinter.messagebox.showerror("Erro Autenticação", f"Usuário não autenticado! \nSeu login ou senha estão incorretos!")
             self.reiniciarTelaLogin()
 
