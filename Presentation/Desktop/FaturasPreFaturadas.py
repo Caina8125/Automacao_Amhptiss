@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import os
 import threading
 from time import sleep
@@ -12,15 +13,25 @@ import Application.AppService.FaturasPreFaturadasAppService as Faturas
 import Application.AppService.GuiasFaturaAppService as Guias
 import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
 
-class telaTabelaFaturas():
-    def __init__(self, janela,token,obj,codigoConvenio, setor):
+class telaTabelaFaturas(ABC):
+    def tela_tabela_faturas(self, janela,token,obj,codigoConvenio, setor):
         super().__init__()
         self.tela = janela
+        self.container1 = Frame(self.tela)
+        self.container1.pack()
+        self.container2 = Frame(self.tela)
+        self.container2.pack()
+        self.container3 = Frame(self.tela)
+        self.container3.pack()
+        self.container4 = Frame(self.tela)
+        self.container4.pack()
+        self.container5 = Frame(self.tela)
+        self.container5.pack()
         self.token = token
         self.setorUsuario = setor
         self.obj = obj
         self.exibirBotaoDark()
-        ImageLabel.iniciarGif(self,janela=self.tela,texto="Buscando faturas no \nAMHPTISS...")
+        ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas no \nAMHPTISS...")
         
         self.codigoConvenio = codigoConvenio
         self.token = token
@@ -37,13 +48,13 @@ class telaTabelaFaturas():
     def show_data(self):
         ImageLabel.ocultarGif(self)
         # self.ocultarBotaoDark()
-        # img = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\voltar.png"), size=(20,30))
+        img = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\voltar.png"), size=(20,30))
 
         # self.exibirBotaoDark()
         self.treeView(listas=self.listas)
         self.botaoBuscarFaturas.pack(padx=10, pady=10)
-        # self.botaoVoltar = customtkinter.CTkButton(self.tela, hover=False, fg_color='transparent', bg_color="transparent",width=80,text="", image=img, command=lambda: threading.Thread(target=self.botao_voltar_click).start())
-        # self.botaoVoltar.place(y=40, x=20)
+        self.botaoVoltar = customtkinter.CTkButton(self.tela, hover=False, fg_color='transparent', bg_color="transparent",width=80,text="", image=img, command=self.botao_voltar_click)
+        self.botaoVoltar.place(y=50, x=10)
 
         
         # Fecha a tela de carregamento após mostrar os dados por um tempo
@@ -59,7 +70,7 @@ class telaTabelaFaturas():
 
     def treeView(self, listas):
         self.qtd = len(listas) 
-        self.texto = customtkinter.CTkLabel(self.tela, text=f"{self.qtd} Faturas Pré-Faturadas", text_color="#274360",font=("Arial",20))
+        self.texto = customtkinter.CTkLabel(self.container2, text=f"{self.qtd} Faturas Pré-Faturadas", text_color="#274360",font=("Arial",20))
         self.texto.pack(padx=3, pady=3)
 
         self.style = ttk.Style()
@@ -72,18 +83,19 @@ class telaTabelaFaturas():
                 background=[('selected','gray')],
                 foreground=[('selected','black')])
         
-        self.my_tree = ttk.Treeview(self.tela)
-        self.my_tree['columns'] = ("Faturas", "Remessas", "Convênio", "Usuário", "Protocolos", "Status", "Arquivo")
+        self.my_tree = ttk.Treeview(self.container3)
+        self.my_tree['columns'] = ("Faturas", "Remessas", "Convênio", "Usuário", "Protocolos", "Envio Operadora", "Status", "Arquivo")
         self.my_tree.column("#0",width=0, stretch=NO)
         self.my_tree.column("Faturas", anchor=CENTER, width=70)
         self.my_tree.column("Remessas",anchor=CENTER, width=70)
         self.my_tree.column("Convênio",anchor=CENTER, width=100)
         self.my_tree.column("Usuário", anchor=CENTER, width=140)
         self.my_tree.column("Protocolos", anchor=CENTER, width=70)
+        self.my_tree.column("Envio Operadora", anchor=CENTER, width=70)
         self.my_tree.column("Status", anchor=CENTER, width=140)
         self.my_tree.column("Arquivo", anchor=CENTER, width=100)
 
-        for col in ("Faturas", "Remessas", "Convênio", "Usuário", "Protocolos", "Status", "Arquivo"):
+        for col in ("Faturas", "Remessas", "Convênio", "Usuário", "Protocolos", "Envio Operadora", "Status", "Arquivo"):
             self.my_tree.heading(col, text=col,anchor=CENTER,command=lambda c=col: self.sort_treeview(self.my_tree, c, False))
 
         i = 0
@@ -93,16 +105,12 @@ class telaTabelaFaturas():
         self.my_tree["displaycolumns"]=("Faturas", "Remessas", "Convênio", "Usuário", "Status", "Arquivo")
         self.my_tree.pack(padx=3, pady=2)
         
-        self.botaoStart = customtkinter.CTkButton(self.tela, fg_color="#274360",width=80,text="Enviar", command=lambda: threading.Thread(target=self.iniciar, args=(self.obj,)).start())
-        # self.botaoStart.place(x=178, y=340)
-
-        self.botaoRemover = customtkinter.CTkButton(self.tela, fg_color="#b30505",width=80,text="Remover",command=lambda: threading.Thread(target=self.remover).start())
         # self.botaoRemover.place(x=280, y=340)
 
-        self.botaoRemoverFaturasEnviadas = customtkinter.CTkButton(self.tela, fg_color="#058288",width=80,text="Remover Faturas Enviadas", command=lambda: threading.Thread(target=self.remover()).start())
+        self.botaoRemoverFaturasEnviadas = customtkinter.CTkButton(self.container4, fg_color="#058288",width=80,text="Remover Faturas Enviadas", command=lambda: threading.Thread(target=self.remover()).start())
         # self.botaoRemover.place(x=280, y=340)
 
-        self.botaoBuscarFaturas = customtkinter.CTkButton(self.tela, width=80,text="Buscar Faturas Escaneadas ", command=lambda: threading.Thread(target=self.buscarFaturas()).start())
+        self.botaoBuscarFaturas = customtkinter.CTkButton(self.container4, width=80,text="Buscar Faturas Escaneadas ", command=lambda: threading.Thread(target=self.buscarFaturas).start())
         # self.botaoBuscarFaturas.pack(padx=10, pady=10)
 
     def get_treeview_data(self):
@@ -114,22 +122,28 @@ class telaTabelaFaturas():
     
     def iniciar(self, obj):
         self.ocultarTreeView()
-        ImageLabel.iniciarGif(self,janela=self.tela,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
+        self.botaoVoltar.configure(state="disabled")
+        ImageLabel.iniciarGif(self,janela=self.container2,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
         threading.Thread(target=self.exec_automacao, args=(obj,)).start()
 
     def exec_automacao(self, obj):
         faturas = self.obterFaturasEncontradas()
         df = DataFrame(faturas)
-        df.columns = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Status Fatura', 'Nome Arquivo', 'Caminho']
+        df_treeview = DataFrame(self.get_treeview_data())
+
+        df.columns = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
+        df_treeview.columns = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
 
         if self.codigoConvenio == 225:
             dados_faturas = self.get_guias_fatura(df)
-            obj.inicia_automacao(dados_faturas=dados_faturas, df_treeview=...)
+            df_treeview = obj.inicia_automacao(dados_faturas=dados_faturas, df_treeview=df_treeview, token=self.token)
 
         else:
-            obj.inicia_automacao(dados_fatura=faturas)
+            df_treeview = obj.inicia_automacao(dados_fatura=faturas, df_treeview=df_treeview)
 
         ImageLabel.ocultarGif(self)
+        self.reiniciarTreeView(df_treeview.values.tolist())
+        self.botaoVoltar.configure(state="normal")
 
     def botaoRoboPaz(self):
         self.photoPaz = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\RoboEnvia.png"), size=(100,100))
@@ -155,7 +169,8 @@ class telaTabelaFaturas():
                     dados_guia.append(
                         {
                             "guia": guia,
-                            "caminho_guia": caminho_guia
+                            "caminho_guia": caminho_guia,
+                            "guia_enviada": False
                         }
                     )
 
@@ -163,7 +178,8 @@ class telaTabelaFaturas():
                     dados_guia.append(
                         {
                             "guia": guia,
-                            "caminho_guia": caminho_guia
+                            "caminho_guia": caminho_guia,
+                            "guia_enviada": False
                         }
                     )
 
@@ -194,8 +210,8 @@ class telaTabelaFaturas():
         self.faturas = []
         for item in self.my_tree.get_children():
             self.valores = self.my_tree.item(item, 'values')
-            self.status = self.valores[5]
-            if self.status != "Não Encontrado":
+            self.status = self.valores[6]
+            if self.status != "Fatura Não Encontrada" and self.status != "Enviada":
                 self.faturas.append(self.valores)
 
         return self.faturas
@@ -210,7 +226,8 @@ class telaTabelaFaturas():
 
     def buscarFaturas(self):
         self.ocultarTreeView()
-        ImageLabel.iniciarGif(self,janela=self.tela,texto="Buscando faturas\nescaneadas...")
+        self.botaoVoltar.configure(state="disabled")
+        ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas\nescaneadas...")
         threading.Thread(target=self.exec_busca_faturas_escaneadsas).start()
         
     def exec_busca_faturas_escaneadsas(self):
@@ -220,19 +237,24 @@ class telaTabelaFaturas():
         listaCaminhoFaturas.sort_values('Status Envio', ascending=False, inplace=True)
         df = listaCaminhoFaturas.values.tolist()
         ImageLabel.ocultarGif(self)
-        self.reiniciarTreeView(listaAtualizada=df)    
+        self.reiniciarTreeView(listaAtualizada=df)
+        self.botaoVoltar.configure(state="normal")    
 
     def reiniciarTreeView(self,listaAtualizada):
         # self.botaoRemoverFaturasEnviadas.place(x=318, y=420)
         # self.botaoDark.pack()
-        self.botaoStart.place(x=220, y=420)
-        self.botaoRemover.place(x=330, y=420)
         self.treeView(listaAtualizada)
+        self.botaoStart = customtkinter.CTkButton(self.container4, fg_color="#274360",width=80,text="Enviar", command=lambda: threading.Thread(target=self.iniciar, args=(self.obj,)).start())
+        self.botaoRemover = customtkinter.CTkButton(self.container4, fg_color="#b30505",width=80,text="Remover",command=lambda: threading.Thread(target=self.remover).start())
+        self.botaoStart.pack(side=LEFT, pady=20, padx=30)
+        self.botaoRemover.pack(side=LEFT, pady=20, padx=30)
 
     def ocultarTreeView(self):
-        self.botaoStart.place_forget()
-        self.botaoRemover.place_forget()
-        # self.botaoDark.pack_forget()
+        try:
+            self.botaoStart.pack_forget()
+            self.botaoRemover.pack_forget()
+        except:
+            pass
         self.texto.pack_forget()
         self.my_tree.pack_forget()
         self.botaoBuscarFaturas.pack_forget()
@@ -255,20 +277,22 @@ class telaTabelaFaturas():
 
     def exibirBotaoDark(self):
         self.photo = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\logo.png"), size=(60,70))
-        self.botaoDark = customtkinter.CTkButton(self.tela,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
+        self.botaoDark = customtkinter.CTkButton(self.container1,text="",image=self.photo, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
         self.botaoDark.pack()
 
-    # def botao_voltar_click(self):
-    #     self.botaoDark.pack_forget()
-    #     self.texto.pack_forget()
-    #     self.ocultarTreeView()
-    #     TelaSelecioneAutomacoes(self.setorUsuario, self.tela, self.token)
+    @abstractmethod
+    def botao_voltar_click(self):
+        ...
+        # self.botaoDark.pack_forget()
+        # self.texto.pack_forget()
+        # self.ocultarTreeView()
+        # TelaSelecioneAutomacoes(self.setorUsuario, self.tela, self.token)
         
-        try:
-            self.botaoBuscarFaturas.pack_forget()
-        except:
-            try:
-                self.botaoRemover.place_forget()
-                self.botaoStart.place_forget()
-            except:
-                pass
+        # try:
+        #     self.botaoBuscarFaturas.pack_forget()
+        # except:
+        #     try:
+        #         self.botaoRemover.place_forget()
+        #         self.botaoStart.place_forget()
+        #     except:
+        #         pass

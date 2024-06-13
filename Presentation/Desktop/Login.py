@@ -5,7 +5,7 @@ import tkinter.messagebox
 from PIL import Image, ImageTk
 from itertools import count, cycle
 from Presentation.Desktop.Gif import ImageLabel
-from Presentation.Desktop.SelecioneAutomacao import TelaSelecioneAutomacoes
+from Presentation.Desktop.SelecionarEFaturasPre import SelecionarFaturasPre
 import Application.AppService.AutomacaoService.AutenticacaoAppService as AuhtAppService
 
 class Login:
@@ -56,7 +56,7 @@ class Login:
         self.botaoLogar.pack_forget()
 
     def reiniciarTelaLogin(self):
-        ImageLabel.ocultarGif(self)
+        ImageLabel.ocultarGif()
         self.login.pack(padx=10, pady=10)
         self.email.pack(padx=10, pady=10)
         self.senha.pack(padx=10, pady=10)
@@ -77,7 +77,7 @@ class Login:
             if (autenticacao[0]):
                 ImageLabel.ocultarGif(self)
                 self.ocultarBotaoDark()
-                TelaSelecioneAutomacoes(setor, self.tela,token=autenticacao[1])
+                SelecionarFaturasPre(setor, self.tela,token=autenticacao[1])
             else:
                 tkinter.messagebox.showerror("Erro Autenticação", f"Usuário informado não tem permissão no setor {setor}")
                 self.reiniciarTelaLogin()

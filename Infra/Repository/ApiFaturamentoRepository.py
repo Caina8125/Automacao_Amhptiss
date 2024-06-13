@@ -40,13 +40,13 @@ def api_fatura(tipo_negociacao, convenio_id, processo_id, token):
     content = json.loads(response.content)
     return content
 
-def post_status_envio_operadora(self, tipo_negociacao, remessa_id, envio_operadora, token):
-    url_api = f'http://10.0.0.142:9000/api/faturamento/{tipo_negociacao}/envio-operadora?remessaId={remessa_id}&envioOperadora={envio_operadora}'
+def post_status_envio_operadora(tipo_negociacao, processo_id, envio, token):
+    url_api = f'http://10.0.0.142:9000/api/faturamento/{tipo_negociacao}/lancar-envio-guia-portal/{processo_id}/{envio}'
 
     data = {
-        'tiponegociacao': tipo_negociacao,
-        'remessaId': remessa_id,
-        'envioOperadora': envio_operadora,
+        'tipoNegociacao': tipo_negociacao,
+        'processoId': processo_id,
+        'envio': envio
     }
 
     headers = {
@@ -54,5 +54,5 @@ def post_status_envio_operadora(self, tipo_negociacao, remessa_id, envio_operado
         'api-key': '8EC08ED9-94DC-413E-9A29-BC211A9BEA30'
     }
 
-    response = requests.get(url=url_api, headers=headers, data=data, verify=False)
+    response = requests.post(url=url_api, headers=headers, data=data, verify=False)
     return response.status_code

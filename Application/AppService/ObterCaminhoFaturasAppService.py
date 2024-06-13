@@ -4,7 +4,7 @@ import Infra.Repository.GuiasEscaneadasRepository as GuiasEscaneadas
 def TrasformarDataFrame(lista):
     try:
         df = pd.DataFrame(lista)
-        df.columns = ["Fatura", "Remessa", "Convenio","Usuario", "Protocolo"]
+        df.columns = ["Fatura", "Remessa", "Convenio","Usuario", "Protocolo", "Envio Operadora"]
         return df
     except Exception as e:
         print(e)

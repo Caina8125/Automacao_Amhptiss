@@ -1,8 +1,12 @@
 from datetime import date
+from tkinter.messagebox import showerror
 from Application.AppService.AutomacaoService.page_element import PageElement
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import InvalidArgumentException
 from selenium.webdriver.common.by import By
 from time import sleep
+
+from Application.AppService.EnvioOperadoraService import atualizar_status_envio_operadora
 
 class Geap(PageElement):
     acessar_portal = By.XPATH, '/html/body/div[3]/div[3]/div[1]/form/div[1]/div[1]/div/a'
@@ -23,10 +27,11 @@ class Geap(PageElement):
     input_file = By.XPATH, '/html/body/input[2]'
     btn_remover_anexos = By.ID, 'clear-dropzone'
 
-    def __init__(self, url: str, cpf: str, senha: str) -> None:
+    def __init__(self, url: str, cpf: str, senha: str, tipo_negociacao: str) -> None:
         super().__init__(url)
         self.cpf = cpf
         self.senha = senha
+        self.tipo_negociacao = tipo_negociacao
 
     def exe_login(self):
         sleep(4)
@@ -99,51 +104,77 @@ class Geap(PageElement):
             return False
 
     def inicia_automacao(self, **kwargs):
-        self.init_driver()
-        self.open()
-        self.exe_login()
-        self.exe_caminho()
+        df_treeview = kwargs.get('df_treeview')
+        try:
+            self.init_driver()
+            self.open()
+            self.exe_login()
+            self.exe_caminho()
 
-        setor = kwargs.get('setor')
-        dados_remessa = kwargs.get('dados_faturas')
-        mes_atual = date.today().strftime('%m/%Y')
-        sleep(1.5)
+            token = kwargs.get('token')
+            dados_remessa = kwargs.get('dados_faturas')
+            mes_atual = date.today().strftime('%m/%Y')
+            sleep(1.5)
 
-        for fatura in dados_remessa['faturas']:
-            n_processo = fatura['fatura']
-            protocolo = fatura['protocolo']
-            guias = fatura['lista_guias']
-            self.click_option(self.select_mes_referencia, mes_atual)
-
-            if not self.click_option(self.select_nr, protocolo):
-                #TODO não lançar que essa fatura foi enviada
-                ...
-            
-            for guia_data in guias:
+            for fatura in dados_remessa['faturas']:
+                n_processo = fatura['fatura']
+                protocolo = fatura['protocolo']
+                guias = fatura['lista_guias']
                 self.click_option(self.select_mes_referencia, mes_atual)
-                sleep(2)
-                self.click_option(self.select_nr, protocolo)
-                guia = f"{guia_data['guia']}".replace('.0', '')
-                caminho = guia_data['caminho_guia']
-                sleep(2)
-                self.click_option(self.select_conta, guia)
 
-                if not self.click_option(self.select_conta, guia):
-                    raise Exception(f'Guia {guia} não foi encontrada no portal! Por favor, verificar se o número diverge com o que está no portal.')
+                if not self.click_option(self.select_nr, protocolo):
+                    continue
                 
-                sleep(2)
-
-                self.click_option(self.select_tipo_anexo, 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)')
-                sleep(2)
-
-                self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
-                sleep(2)
-                self.driver.find_element(*self.input_file).send_keys(caminho)
-                sleep(2)
-                self.driver.find_element(*self.btn_processar).click()
-                sleep(3)
-                if 'Ocorreu um erro ao salvar os dados' in self.driver.find_element(*self.body).text:
-                    self.driver.find_element(*self.text_area_decricao).clear()
+                for i, guia_data in enumerate(guias):
+                    self.click_option(self.select_mes_referencia, mes_atual)
                     sleep(2)
-                    self.driver.find_element(*self.btn_remover_anexos).click()
+                    self.click_option(self.select_nr, protocolo)
+                    guia = f"{guia_data['guia']}".replace('.0', '')
+                    caminho = guia_data['caminho_guia']
                     sleep(2)
+                    self.click_option(self.select_conta, guia)
+
+                    if not self.click_option(self.select_conta, guia):
+                        continue
+                    
+                    sleep(2)
+
+                    self.click_option(self.select_tipo_anexo, 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)')
+                    sleep(2)
+
+                    self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
+                    sleep(2)
+                    try:
+                        self.driver.find_element(*self.input_file).send_keys(caminho)
+                    except InvalidArgumentException as e:
+                        self.driver.find_element(*self.text_area_decricao).clear()
+                        sleep(2)
+                        continue
+                    sleep(2)
+                    self.driver.find_element(*self.btn_processar).click()
+                    sleep(3)
+                    if 'Ocorreu um erro ao salvar os dados' in self.driver.find_element(*self.body).text:
+                        self.driver.find_element(*self.text_area_decricao).clear()
+                        sleep(2)
+                        self.driver.find_element(*self.btn_remover_anexos).click()
+                        sleep(2)
+                    
+                    guias[i]['guia_enviada'] = True
+
+                bool_list = [value['guia_enviada'] for value in guias]
+
+                if False not in bool_list:
+                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "S", token)
+                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada'
+                elif True not in bool_list:
+                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "N", token)
+                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Não Enviada'
+                elif True in bool_list and False in bool_list:
+                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "P", token)
+                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada Parcialmente'
+
+        except Exception as e:
+            showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
+
+        self.driver.quit()
+        return df_treeview

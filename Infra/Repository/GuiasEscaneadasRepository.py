@@ -25,6 +25,12 @@ def BuscarGuiasEscaneadas(listas,caminho,variavel, cod_convenio):
         # Verifica se o arquivo existe na pasta
         caminho_arquivo = os.path.join(nome_pasta, arquivoFatura)
 
+        if linha['Envio Operadora'] == 'S':
+            caminhoFaturas.append('')
+            statusBusca.append('Enviada')
+            arquivo.append('')
+            continue
+
         if cod_convenio == 225:
             if os.path.isdir(caminho_arquivo):
                 caminhoFaturas.append(caminho_arquivo)
