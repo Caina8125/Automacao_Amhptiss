@@ -3,7 +3,6 @@ import os
 import configparser
 import semantic_version
 import tkinter.messagebox
-import asyncio
 
 class Automacao:
     def __init__(self):

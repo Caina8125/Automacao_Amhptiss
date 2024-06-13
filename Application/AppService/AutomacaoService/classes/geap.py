@@ -1,5 +1,7 @@
 from datetime import date
 from tkinter.messagebox import showerror
+
+from pandas import DataFrame
 from Application.AppService.AutomacaoService.page_element import PageElement
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import InvalidArgumentException
@@ -26,6 +28,7 @@ class Geap(PageElement):
     btn_processar = By.ID, 'btnFinalizar'
     input_file = By.XPATH, '/html/body/input[2]'
     btn_remover_anexos = By.ID, 'clear-dropzone'
+    div_msg = By.ID, 'toast-container'
 
     def __init__(self, url: str, cpf: str, senha: str, tipo_negociacao: str) -> None:
         super().__init__(url)
@@ -105,19 +108,21 @@ class Geap(PageElement):
 
     def inicia_automacao(self, **kwargs):
         df_treeview = kwargs.get('df_treeview')
-        try:
-            self.init_driver()
-            self.open()
-            self.exe_login()
-            self.exe_caminho()
+        self.init_driver()
+        self.open()
+        self.exe_login()
+        self.exe_caminho()
 
-            token = kwargs.get('token')
-            dados_remessa = kwargs.get('dados_faturas')
-            mes_atual = date.today().strftime('%m/%Y')
-            sleep(1.5)
+        token = kwargs.get('token')
+        dados_remessa = kwargs.get('dados_faturas')
+        data_atual = date.today()
+        mes_atual = data_atual.strftime('%m/%Y')
+        sleep(1.5)
+        lista_relatorio_guia = []
 
-            for fatura in dados_remessa['faturas']:
-                n_processo = fatura['fatura']
+        for fatura in dados_remessa['faturas']:
+            try:
+                n_processo = int(fatura['fatura'])
                 protocolo = fatura['protocolo']
                 guias = fatura['lista_guias']
                 self.click_option(self.select_mes_referencia, mes_atual)
@@ -127,23 +132,23 @@ class Geap(PageElement):
                 
                 for i, guia_data in enumerate(guias):
                     self.click_option(self.select_mes_referencia, mes_atual)
-                    sleep(2)
+                    sleep(1)
                     self.click_option(self.select_nr, protocolo)
                     guia = f"{guia_data['guia']}".replace('.0', '')
                     caminho = guia_data['caminho_guia']
-                    sleep(2)
+                    sleep(1)
                     self.click_option(self.select_conta, guia)
 
                     if not self.click_option(self.select_conta, guia):
                         continue
                     
-                    sleep(2)
+                    sleep(1)
 
                     self.click_option(self.select_tipo_anexo, 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)')
-                    sleep(2)
+                    sleep(1)
 
                     self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
-                    sleep(2)
+                    sleep(1)
                     try:
                         self.driver.find_element(*self.input_file).send_keys(caminho)
                     except InvalidArgumentException as e:
@@ -152,14 +157,16 @@ class Geap(PageElement):
                         continue
                     sleep(2)
                     self.driver.find_element(*self.btn_processar).click()
-                    sleep(3)
-                    if 'Ocorreu um erro ao salvar os dados' in self.driver.find_element(*self.body).text:
+                    sleep(2)
+                    msg = self.driver.find_element(*self.div_msg).text
+                    if 'Ocorreu um erro ao salvar os dados' in msg:
                         self.driver.find_element(*self.text_area_decricao).clear()
-                        sleep(2)
+                        sleep(1)
                         self.driver.find_element(*self.btn_remover_anexos).click()
-                        sleep(2)
+                        sleep(1)
                     
                     guias[i]['guia_enviada'] = True
+                    lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
 
                 bool_list = [value['guia_enviada'] for value in guias]
 
@@ -173,8 +180,14 @@ class Geap(PageElement):
                     atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "P", token)
                     df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada Parcialmente'
 
-        except Exception as e:
-            showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
+                
 
+            except Exception as e:
+                showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
+                return df_treeview
+            
+        df_relatorio = DataFrame(lista_relatorio_guia)
+        df_relatorio.columns = ['Fatura', 'Protocolo', 'Guia', 'Log Portal']
+        df_relatorio.to_excel('geap_' + data_atual.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)
         self.driver.quit()
         return df_treeview
