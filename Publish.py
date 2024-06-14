@@ -24,6 +24,8 @@ class PublishExe:
         self.pastaDevDomain = self.config['FoldersDesenvolvimento']['Domain']
         self.pastaDevInfra = self.config['FoldersDesenvolvimento']['Infra']
         self.pastaDevIni = self.config['ConfigPath']['PathLocalIni']
+        self.seleniumwire = self.config['FoldersDesenvolvimento']['seleniumwire']
+        self.internal = self.config['FoldersDesenvolvimento']['internal']
 
         self.pastaAtualizaPresentation = self.config['FoldersAtualiza']['Presentation']
         self.pastaAtualizaApplication = self.config['FoldersAtualiza']['Application']
@@ -43,10 +45,15 @@ class PublishExe:
         self.pathPastasAtualiza.append(self.pastaAtualizaInfra)
         self.pathPastasAtualiza.append(self.pastaAtualizaIni)
 
+        self.incluirSeleniumWire()
         self.publishExecutavel()
         self.SubirPastas()
         self.alterarVersaoLocal()
         self.alterarVersaoAtualiza()
+
+    def incluirSeleniumWire(self):
+        caminho_completo_destino = os.path.join(self.internal, "seleniumwire")
+        shutil.copytree(self.seleniumwire, caminho_completo_destino)
 
     def publishExecutavel(self):
         if not os.path.isdir(self.destino):
