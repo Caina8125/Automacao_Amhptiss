@@ -108,17 +108,21 @@ class Geap(PageElement):
 
     def inicia_automacao(self, **kwargs):
         df_treeview = kwargs.get('df_treeview')
-        self.init_driver()
-        self.open()
-        self.exe_login()
-        self.exe_caminho()
+        try:
+            self.init_driver()
+            self.open()
+            self.exe_login()
+            self.exe_caminho()
 
-        token = kwargs.get('token')
-        dados_remessa = kwargs.get('dados_faturas')
-        data_atual = date.today()
-        mes_atual = data_atual.strftime('%m/%Y')
-        sleep(1.5)
-        lista_relatorio_guia = []
+            token = kwargs.get('token')
+            dados_remessa = kwargs.get('dados_faturas')
+            data_atual = date.today()
+            mes_atual = data_atual.strftime('%m/%Y')
+            sleep(1.5)
+            lista_relatorio_guia = []
+        except Exception as e:
+            showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
+            return df_treeview
 
         for fatura in dados_remessa['faturas']:
             try:
