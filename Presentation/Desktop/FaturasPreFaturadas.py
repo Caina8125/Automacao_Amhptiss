@@ -8,6 +8,7 @@ from tkinter import ttk
 import tkinter.messagebox
 from PIL import Image
 from pandas import DataFrame
+import customtkinter as ctk
 from Presentation.Desktop.Gif import ImageLabel
 import Application.AppService.FaturasPreFaturadasAppService as Faturas
 import Application.AppService.GuiasFaturaAppService as Guias
@@ -17,15 +18,15 @@ class telaTabelaFaturas(ABC):
     def tela_tabela_faturas(self, janela,token,obj,codigoConvenio, setor):
         super().__init__()
         self.tela = janela
-        self.container1 = Frame(self.tela)
+        self.container1 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container1.pack()
-        self.container2 = Frame(self.tela)
+        self.container2 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container2.pack()
-        self.container3 = Frame(self.tela)
+        self.container3 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container3.pack()
-        self.container4 = Frame(self.tela)
+        self.container4 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container4.pack()
-        self.container5 = Frame(self.tela)
+        self.container5 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container5.pack()
         self.token = token
         self.setorUsuario = setor
