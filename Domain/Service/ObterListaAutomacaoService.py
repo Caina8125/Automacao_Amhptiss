@@ -9,7 +9,7 @@ def aplicarValidacaoUsuarioSetor(setor):
             lista = listaAutomacao.obterListaGlosa()
         case "Financeiro":
             lista = listaAutomacao.obterListaFinanceiro()
-        case "Nota_Fiscal":
+        case "NotaFiscal":
             lista = listaAutomacao.obterListaTesouraria()
     
     return lista
