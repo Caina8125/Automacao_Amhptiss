@@ -5,6 +5,7 @@ from pandas import DataFrame
 from Application.AppService.AutomacaoService.page_element import PageElement
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import InvalidArgumentException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from time import sleep
 
@@ -18,8 +19,8 @@ class Geap(PageElement):
     fechar = By.XPATH, '/html/body/div[4]/div[2]/div/div[3]/button'
     portal_tiss = (By.XPATH, '/html/body/div[1]/div/div[2]/div/div[1]/div[1]/div[1]/div/div')
     alerta = By.XPATH,' /html/body/div[2]/div/center/a'
-    a_tiss = By.XPATH, '/html/body/div[1]/nav/ul/li[3]'
-    anexo_conta = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/ul/li[5]/a'
+    a_tiss = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/a'
+    anexo_conta = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/ul/li[7]/a'
     select_mes_referencia = By.ID, 'dropReferencia'
     select_nr = By.ID, 'dropNr'
     select_conta = By.ID, 'dropConta'
@@ -86,11 +87,14 @@ class Geap(PageElement):
             self.driver.find_element(*self.alerta).click()
         except:
             print('Alerta não apareceu')
-        self.driver.implicitly_wait(15)
-        sleep(2)
+        self.driver.implicitly_wait(180)
+        # sleep(2)
+        # self.driver.get('https://geap.topsaude.com.br/PortalCredenciado/HomePortalCredenciado/Home/AreaLogada#PORCRED50')
+        # sleep(3)
         # self.driver.find_element(*self.a_tiss).click()
         # sleep(2)
         self.driver.find_element(*self.anexo_conta).click()
+        self.driver.implicitly_wait(15)
         sleep(2)
 
     def click_option(self, select_tuple, text):
