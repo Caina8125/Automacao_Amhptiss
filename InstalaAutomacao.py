@@ -12,6 +12,7 @@ class Atualiza:
         self.janela.title("AMHP - Automações")
         self.janela.resizable(width=False, height=False)
         self.janela.eval('tk::PlaceWindow . center')
+        self.janela.overrideredirect(True)
         
         # self.janela.overrideredirect(True)
         self.pathLocal = r"C:\Automacao_Amhptiss"
@@ -72,7 +73,8 @@ class Atualiza:
             self.label("Aguarde! \nAtualizando Automação...")
             # self.janela.update_idletasks
             try:
-                shutil.rmtree(self.pathLocal)
+                # shutil.rmtree(self.pathLocal)
+                self.remove_directory_except(self.pathLocal, 'Output')
                 shutil.copytree(self.pathAtualiza, self.pathLocal)
                 self.chamarAutomacao()
             except Exception as e:
@@ -82,6 +84,18 @@ class Atualiza:
                 except Exception as e:
                     tkinter.messagebox.showerror("Erro", f"Erro ao tentar Copiar pasta com dirs_exist_ok {e}")
                     self.janela.after(500,lambda:self.janela.destroy())
+
+    def remove_directory_except(self, directory, except_folder):
+        for item in os.listdir(directory):
+            item_path = os.path.join(directory, item)
+            # Verifica se o item é o diretório que queremos manter
+            if os.path.basename(item_path) == except_folder:
+                continue
+            # Remove arquivos e diretórios
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+            else:
+                os.remove(item_path)
 
 
 Atualiza().janela.mainloop()

@@ -1,6 +1,8 @@
 import os
 import tkinter.messagebox
 
+from pandas import DataFrame
+
 # def GuiasEscaneadasBrb():
 #     pathEcaneadasBrb = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
 #     import os
@@ -12,7 +14,7 @@ def BuscarGuiasEscaneadas(listas,caminho,variavel, cod_convenio):
     statusBusca = []
     arquivo = []
 
-    for _, linha in listas.iterrows():
+    for index, linha in listas.iterrows():
         if cod_convenio == 225:
             arquivoFatura = linha["Fatura"]
         else:
@@ -26,9 +28,7 @@ def BuscarGuiasEscaneadas(listas,caminho,variavel, cod_convenio):
         caminho_arquivo = os.path.join(nome_pasta, arquivoFatura)
 
         if linha['Envio Operadora'] == 'S':
-            caminhoFaturas.append('')
-            statusBusca.append('Enviada')
-            arquivo.append('')
+            listas = listas.drop(index)
             continue
 
         if cod_convenio == 225:

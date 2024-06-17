@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import os
 import threading
 from time import sleep
@@ -17,6 +19,8 @@ import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
 class telaTabelaFaturas(ABC):
     def tela_tabela_faturas(self, janela,token,obj,codigoConvenio, setor):
         super().__init__()
+        self.data_atual = datetime.now()
+        self.seis_meses_anterior = self.data_atual - relativedelta(months=6)
         self.tela = janela
         self.container1 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container1.pack()
@@ -41,7 +45,9 @@ class telaTabelaFaturas(ABC):
         threading.Thread(target=self.pegar_dados).start()
         
     def pegar_dados(self):
-        self.listas = Faturas.obterListaFaturas("normal",self.codigoConvenio,400,"2023/01/01","2024/05/30",self.token)
+        data_atual_str = self.data_atual.strftime('%Y/%m/%d')
+        seis_meses_anterior_str = self.seis_meses_anterior.strftime('%Y/%m/%d')
+        self.listas = Faturas.obterListaFaturas("normal",self.codigoConvenio,400, seis_meses_anterior_str, data_atual_str,self.token)
         print(self.listas)
         self.show_data()
         # self.after(0, self.show_data, self.listas)
