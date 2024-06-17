@@ -206,4 +206,4 @@ class Geap(PageElement):
             showwarning('', 'Nenhum relatório a ser gerado.')
             return
         df_relatorio.columns = ['Fatura', 'Protocolo', 'Guia', 'Log Portal']
-        df_relatorio.to_excel('geap_' + data.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)
+        df_relatorio.to_excel('Output\\geap_' + data.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)
