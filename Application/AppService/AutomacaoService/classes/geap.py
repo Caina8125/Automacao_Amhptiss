@@ -1,5 +1,5 @@
 from datetime import date
-from tkinter.messagebox import showerror
+from tkinter.messagebox import showerror, showwarning
 
 from pandas import DataFrame
 from Application.AppService.AutomacaoService.page_element import PageElement
@@ -110,6 +110,8 @@ class Geap(PageElement):
 
     def inicia_automacao(self, **kwargs):
         df_treeview = kwargs.get('df_treeview')
+        lista_relatorio_guia = []
+        data_atual = date.today()
         try:
             self.init_driver()
             self.open()
@@ -118,12 +120,11 @@ class Geap(PageElement):
 
             token = kwargs.get('token')
             dados_remessa = kwargs.get('dados_faturas')
-            data_atual = date.today()
             mes_atual = data_atual.strftime('%m/%Y')
             sleep(1.5)
-            lista_relatorio_guia = []
         except Exception as e:
             showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
+            self.gerar_relatorio(lista_relatorio_guia, data_atual)
             return df_treeview
 
         for fatura in dados_remessa['faturas']:
@@ -186,14 +187,18 @@ class Geap(PageElement):
                     atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "P", token)
                     df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada Parcialmente'
 
-                
-
             except Exception as e:
                 showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
-                return df_treeview
+                break
             
-        df_relatorio = DataFrame(lista_relatorio_guia)
-        df_relatorio.columns = ['Fatura', 'Protocolo', 'Guia', 'Log Portal']
-        df_relatorio.to_excel('geap_' + data_atual.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)
+        self.gerar_relatorio(lista_relatorio_guia, data_atual)
         self.driver.quit()
         return df_treeview
+    
+    def gerar_relatorio(self, lista_relatorio, data):
+        df_relatorio = DataFrame(lista_relatorio)
+        if df_relatorio.empty:
+            showwarning('', 'Nenhum relatório a ser gerado.')
+            return
+        df_relatorio.columns = ['Fatura', 'Protocolo', 'Guia', 'Log Portal']
+        df_relatorio.to_excel('geap_' + data.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)

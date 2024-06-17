@@ -54,12 +54,21 @@ class telaTabelaFaturas(ABC):
         # self.exibirBotaoDark()
         self.treeView(listas=self.listas)
         self.botaoBuscarFaturas.pack(padx=10, pady=10)
-        self.botaoVoltar = customtkinter.CTkButton(self.tela, hover=False, fg_color='transparent', bg_color="transparent",width=80,text="", image=img, command=self.botao_voltar_click)
-        self.botaoVoltar.place(y=50, x=10)
+        self.botaoVoltar = customtkinter.CTkButton(self.tela, hover=False, fg_color='#274360', bg_color="#274360", width=80, text="", image=img, command=self.botao_voltar_click)
+        self.botaoVoltar.place(y=1, x=1)
 
         
         # Fecha a tela de carregamento após mostrar os dados por um tempo
         # self.after(0, self.destroy)
+
+    def toggle_selection(self):
+        all_items = self.my_tree.get_children()
+        selected_items = self.my_tree.selection()
+        
+        if len(all_items) == len(selected_items):
+            self.my_tree.selection_remove(all_items)
+        else:
+            self.my_tree.selection_set(all_items)
 
     def sort_treeview(self,tree, col, reverse):
         # Função para ordenar a treeview com base no cabeçalho clicado
@@ -104,7 +113,10 @@ class telaTabelaFaturas(ABC):
             self.my_tree.insert(parent='', index='end', values=lista)
             i =+ 1
         self.my_tree["displaycolumns"]=("Faturas", "Remessas", "Convênio", "Usuário", "Status", "Arquivo")
-        self.my_tree.pack(padx=3, pady=2)
+        self.scrollbar = ctk.CTkScrollbar(self.container3, orientation='vertical', command=self.my_tree.yview)
+        self.my_tree.configure(yscroll=self.scrollbar.set)
+        self.my_tree.pack(padx=3, pady=2, side=LEFT)
+        self.scrollbar.pack(side=RIGHT, fill='y')
         
         # self.botaoRemover.place(x=280, y=340)
 
@@ -227,6 +239,7 @@ class telaTabelaFaturas(ABC):
 
     def buscarFaturas(self):
         self.ocultarTreeView()
+        self.scrollbar.pack_forget()
         self.botaoVoltar.configure(state="disabled")
         ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas\nescaneadas...")
         threading.Thread(target=self.exec_busca_faturas_escaneadsas).start()
@@ -239,6 +252,9 @@ class telaTabelaFaturas(ABC):
         df = listaCaminhoFaturas.values.tolist()
         ImageLabel.ocultarGif(self)
         self.reiniciarTreeView(listaAtualizada=df)
+        img = customtkinter.CTkImage(light_image = Image.open(r"Infra\Arquivos\select_all.png"), size=(30,40))
+        self.botaoSelectAll = customtkinter.CTkButton(self.tela, hover=False, fg_color='transparent', bg_color="transparent",width=80,text="", image=img, command=self.toggle_selection)
+        self.botaoSelectAll.place(y=103, x=0)
         self.botaoVoltar.configure(state="normal")    
 
     def reiniciarTreeView(self,listaAtualizada):
