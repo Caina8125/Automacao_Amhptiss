@@ -3,9 +3,7 @@ from tkinter.messagebox import showerror
 
 from pandas import DataFrame
 from Application.AppService.AutomacaoService.page_element import PageElement
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import InvalidArgumentException
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from time import sleep
 
@@ -152,7 +150,7 @@ class Geap(PageElement):
                     
                     sleep(1)
 
-                    self.click_option(self.select_tipo_anexo, 'COMPROVANTE DE COMPARECIMENTO (ASSINATURA)')
+                    self.click_option(self.select_tipo_anexo, 'RELATÓRIO DE AUDITORIA')
                     sleep(1)
 
                     self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")

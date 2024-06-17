@@ -1,4 +1,5 @@
 from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
+from Presentation.Desktop.SelecaoUmArquivo import SelecaoUmArquivo
 from Presentation.Desktop.SelecioneAutomacao import TelaSelecioneAutomacoes
 import Application.AppService.AutomacaoService as automacoes
 import tkinter as tk
@@ -203,7 +204,7 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas):
                 ...
 
             case "Tesouraria - Nota Fiscal":
-                ...
+                SelecaoUmArquivo(self.tela, )
             case _:
                 ...
 
