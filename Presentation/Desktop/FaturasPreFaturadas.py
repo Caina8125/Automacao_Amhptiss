@@ -140,7 +140,12 @@ class telaTabelaFaturas(ABC):
         return full_treeview
     
     def iniciar(self, obj):
+        faturas = self.obterFaturasEncontradas()
+        if not faturas:
+            tkinter.messagebox.showwarning('', 'Não há faturas para enviar!')
+            return
         self.ocultarTreeView()
+        self.botaoSelectAll.place_forget()
         self.botaoVoltar.configure(state="disabled")
         ImageLabel.iniciarGif(self,janela=self.container2,texto="Enviando Suas Faturas Escaneadas \nno Portal...")
         threading.Thread(target=self.exec_automacao, args=(obj,)).start()
@@ -162,6 +167,7 @@ class telaTabelaFaturas(ABC):
 
         ImageLabel.ocultarGif(self)
         self.reiniciarTreeView(df_treeview.values.tolist())
+        self.botaoSelectAll.place(y=103, x=0)
         self.botaoVoltar.configure(state="normal")
 
     def botaoRoboPaz(self):
@@ -278,6 +284,7 @@ class telaTabelaFaturas(ABC):
             self.botaoRemover.pack_forget()
         except:
             pass
+        self.scrollbar.pack_forget()
         self.texto.pack_forget()
         self.my_tree.pack_forget()
         self.botaoBuscarFaturas.pack_forget()

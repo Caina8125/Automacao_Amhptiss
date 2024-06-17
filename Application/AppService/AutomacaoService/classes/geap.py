@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from tkinter.messagebox import showerror, showwarning
 
 from pandas import DataFrame
@@ -111,7 +111,7 @@ class Geap(PageElement):
     def inicia_automacao(self, **kwargs):
         df_treeview = kwargs.get('df_treeview')
         lista_relatorio_guia = []
-        data_atual = date.today()
+        data_atual = datetime.now()
         try:
             self.init_driver()
             self.open()
@@ -206,4 +206,4 @@ class Geap(PageElement):
             showwarning('', 'Nenhum relatório a ser gerado.')
             return
         df_relatorio.columns = ['Fatura', 'Protocolo', 'Guia', 'Log Portal']
-        df_relatorio.to_excel('Output\\geap_' + data.strftime('%d_%m_%Y_%H_%M') + '.xlsx', index=False)
+        df_relatorio.to_excel('Output\\geap_' + data.strftime('%d_%m_%Y_%H_%M_%S') + '.xlsx', index=False)
