@@ -164,13 +164,18 @@ class Geap(PageElement):
                         continue
                     sleep(2)
                     self.driver.find_element(*self.btn_processar).click()
-                    sleep(2)
+                    sleep(4)
                     msg = self.driver.find_element(*self.div_msg).text
+
                     if 'Ocorreu um erro ao salvar os dados' in msg:
                         self.driver.find_element(*self.text_area_decricao).clear()
                         sleep(1)
                         self.driver.find_element(*self.btn_remover_anexos).click()
                         sleep(1)
+                        guias[i]['guia_enviada'] = False
+                        lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
+                        continue
+
                     
                     guias[i]['guia_enviada'] = True
                     lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
