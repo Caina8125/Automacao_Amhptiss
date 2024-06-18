@@ -145,7 +145,7 @@ class Geap(PageElement):
                         continue
                     
                     for i, guia_data in enumerate(guias):
-                        #
+                        option.click()
                         self.click_option(self.select_nr, protocolo)
                         guia = f"{guia_data['guia']}".replace('.0', '')
                         caminho = guia_data['caminho_guia']
