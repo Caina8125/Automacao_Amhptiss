@@ -120,77 +120,83 @@ class Geap(PageElement):
 
             token = kwargs.get('token')
             dados_remessa = kwargs.get('dados_faturas')
-            mes_atual = data_atual.strftime('%m/%Y')
             sleep(1.5)
+
         except Exception as e:
             showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")
             self.gerar_relatorio(lista_relatorio_guia, data_atual)
             return df_treeview
 
-        for fatura in dados_remessa['faturas']:
+        element_select_mes = self.driver.find_element(*self.select_mes_referencia)
+        mes_options_list = [option for option in element_select_mes.find_elements(By.TAG_NAME, 'option') if 'Selecione a Referência' not in option.text]
+
+        for option in mes_options_list:
             try:
-                n_processo = int(fatura['fatura'])
-                protocolo = fatura['protocolo']
-                guias = fatura['lista_guias']
-                self.click_option(self.select_mes_referencia, mes_atual)
+                option.click()
+                sleep(1)
 
-                if not self.click_option(self.select_nr, protocolo):
-                    continue
-                
-                for i, guia_data in enumerate(guias):
-                    self.click_option(self.select_mes_referencia, mes_atual)
-                    sleep(1)
-                    self.click_option(self.select_nr, protocolo)
-                    guia = f"{guia_data['guia']}".replace('.0', '')
-                    caminho = guia_data['caminho_guia']
-                    sleep(1)
-                    self.click_option(self.select_conta, guia)
+                for fatura in dados_remessa['faturas']:
+                    n_processo = int(fatura['fatura'])
+                    protocolo = fatura['protocolo']
+                    guias = fatura['lista_guias']
+                    #
 
-                    if not self.click_option(self.select_conta, guia):
+                    if not self.click_option(self.select_nr, protocolo):
                         continue
                     
-                    sleep(1)
+                    for i, guia_data in enumerate(guias):
+                        #
+                        self.click_option(self.select_nr, protocolo)
+                        guia = f"{guia_data['guia']}".replace('.0', '')
+                        caminho = guia_data['caminho_guia']
+                        sleep(1)
+                        self.click_option(self.select_conta, guia)
 
-                    self.click_option(self.select_tipo_anexo, 'RELATÓRIO DE AUDITORIA')
-                    sleep(1)
+                        if not self.click_option(self.select_conta, guia):
+                            continue
+                        
+                        sleep(1)
 
-                    self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
-                    sleep(1)
-                    try:
-                        self.driver.find_element(*self.input_file).send_keys(caminho)
-                    except InvalidArgumentException as e:
-                        self.driver.find_element(*self.text_area_decricao).clear()
+                        self.click_option(self.select_tipo_anexo, 'RELATÓRIO DE AUDITORIA')
+                        sleep(1)
+
+                        self.driver.find_element(*self.text_area_decricao).send_keys("Guia de faturamento.")
+                        sleep(1)
+                        try:
+                            self.driver.find_element(*self.input_file).send_keys(caminho)
+                        except InvalidArgumentException as e:
+                            self.driver.find_element(*self.text_area_decricao).clear()
+                            sleep(2)
+                            continue
                         sleep(2)
-                        continue
-                    sleep(2)
-                    self.driver.find_element(*self.btn_processar).click()
-                    sleep(4)
-                    msg = self.driver.find_element(*self.div_msg).text
+                        self.driver.find_element(*self.btn_processar).click()
+                        sleep(4)
+                        msg = self.driver.find_element(*self.div_msg).text
 
-                    if 'Ocorreu um erro ao salvar os dados' in msg:
-                        self.driver.find_element(*self.text_area_decricao).clear()
-                        sleep(1)
-                        self.driver.find_element(*self.btn_remover_anexos).click()
-                        sleep(1)
-                        guias[i]['guia_enviada'] = False
+                        if 'Ocorreu um erro ao salvar os dados' in msg:
+                            self.driver.find_element(*self.text_area_decricao).clear()
+                            sleep(1)
+                            self.driver.find_element(*self.btn_remover_anexos).click()
+                            sleep(1)
+                            guias[i]['guia_enviada'] = False
+                            lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
+                            continue
+
+                        
+                        guias[i]['guia_enviada'] = True
                         lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
-                        continue
 
-                    
-                    guias[i]['guia_enviada'] = True
-                    lista_relatorio_guia.append([n_processo, protocolo, guia, msg.replace('x\n', '').replace('\n','. ')])
+                    bool_list = [value['guia_enviada'] for value in guias]
 
-                bool_list = [value['guia_enviada'] for value in guias]
-
-                if False not in bool_list:
-                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "S", token)
-                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada'
-                elif True not in bool_list:
-                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "N", token)
-                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Não Enviada'
-                elif True in bool_list and False in bool_list:
-                    atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "P", token)
-                    df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada Parcialmente'
+                    if False not in bool_list:
+                        atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "S", token)
+                        df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada'
+                    elif True not in bool_list:
+                        atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "N", token)
+                        df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Não Enviada'
+                    elif True in bool_list and False in bool_list:
+                        atualizar_status_envio_operadora(self.tipo_negociacao, n_processo, "P", token)
+                        df_treeview.loc[df_treeview['Fatura'] == n_processo, 'Status Fatura'] = 'Enviada Parcialmente'
 
             except Exception as e:
                 showerror('', f"Ocorreu uma exceção não tratada.\n{e.__class__.__name__}:\n{e}")

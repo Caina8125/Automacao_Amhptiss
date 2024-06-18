@@ -215,7 +215,10 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas):
         self.container4.pack_forget()
         self.container5.pack_forget()
         self.botaoVoltar.place_forget()
-        self.botaoSelectAll.place_forget()
+        try:
+            self.botaoSelectAll.place_forget()
+        except:
+            pass
         self.iniciar_tela_selecione(self.setorUsuario, self.tela, self.token)
 
     def ocultar_botoes_enviar_remover(self):
