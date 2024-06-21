@@ -7,7 +7,7 @@ from pandas import DataFrame
 #     pathEcaneadasBrb = r"\\10.0.0.239\guiasscaneadas\2024\BRB"
 #     import os
 
-def BuscarGuiasEscaneadas(listas,caminho,variavel, cod_convenio):
+def BuscarGuiasEscaneadas(listas,caminho, cod_convenio):
     nome_pasta = caminho
 
     caminhoFaturas = []
@@ -17,12 +17,14 @@ def BuscarGuiasEscaneadas(listas,caminho,variavel, cod_convenio):
     for index, linha in listas.iterrows():
         if cod_convenio == 225:
             arquivoFatura = linha["Fatura"]
+        if cod_convenio == 433:
+            arquivoFatura = f'LOTE {linha["Protocolo"]}.pdf'.replace('.0', '')
         else:
-            arquivoFatura = variavel+linha["Fatura"]+'.pdf'
+            arquivoFatura = linha["Fatura"]+'.pdf'
 
         # Verifica se a pasta existe
         if not os.path.isdir(nome_pasta):
-            tkinter.messagebox.showerror("Erro Autenticação", f"A pasta especificada para buscar as faturas não existe")
+            tkinter.messagebox.showerror("", f"A pasta especificada para buscar as faturas não existe")
 
         # Verifica se o arquivo existe na pasta
         caminho_arquivo = os.path.join(nome_pasta, arquivoFatura)
