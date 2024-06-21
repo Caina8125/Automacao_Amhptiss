@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from selenium.webdriver.chrome.webdriver import WebDriver
+import pyautogui
 from selenium.webdriver.remote.webelement import WebElement
-from seleniumwire import webdriver
+import seleniumwire.webdriver as wire_driver
+from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -24,24 +25,43 @@ class PageElement(ABC):
     def __init__(self, url) -> None:
         self.url = url
 
-    def init_driver(self):
-        options: dict = {
-        'proxy' : {
-            'http': 'http://faturamento.fat:87316812#hg12@@10.0.0.230:3128',
-            'https': 'https://faturamento.fat:87316812#hg12@@10.0.0.230:3128'
+    def init_driver(self, py_auto_gui=False):
+        if not py_auto_gui:
+            options: dict = {
+            'proxy' : {
+                'http': 'http://faturamento.fat:87316812#hg12@@10.0.0.230:3128',
+                'https': 'https://faturamento.fat:87316812#hg12@@10.0.0.230:3128'
+                }
             }
-        }
 
+            chrome_options: Options = Options()
+            chrome_options.add_argument("--start-maximized")
+            chrome_options.add_argument('--ignore-certificate-errors')
+            chrome_options.add_argument('--ignore-ssl-errors')
+
+            try:
+                servico: Service = Service(ChromeDriverManager().install())
+                self.driver = wire_driver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
+            except:
+                self.driver = wire_driver.Chrome(seleniumwire_options= options, options = chrome_options) 
+        
         chrome_options: Options = Options()
         chrome_options.add_argument("--start-maximized")
-        chrome_options.add_argument('--ignore-certificate-errors')
-        chrome_options.add_argument('--ignore-ssl-errors')
 
         try:
             servico: Service = Service(ChromeDriverManager().install())
-            self.driver = webdriver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
+            self.driver = webdriver.Chrome(service=servico, options = chrome_options)
         except:
-            self.driver = webdriver.Chrome(seleniumwire_options= options, options = chrome_options) 
+            self.driver = webdriver.Chrome(options = chrome_options)
+            
+        self.open()
+        sleep(4)
+        pyautogui.write('faturamento.fat')
+        pyautogui.press("TAB")
+        sleep(0.5)
+        pyautogui.write("87316812#hg12@")
+        pyautogui.press("enter")
+        sleep(4)
 
     def open(self) -> None:
         self.driver.get(self.url)

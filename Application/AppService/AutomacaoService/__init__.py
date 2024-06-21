@@ -86,6 +86,9 @@ from .classes.connect_med import ConnectMed
 from .Demonstrativo_Gama import BaixarDemonstrativosGama
 #__________________________________________________________________
 
+#Next cloud Maida
+from .classes.next_cloud_maida import NextCloudMaida
+
 __all__ = [
     "AnexarGuiaGeap",
     "Conferencia"

@@ -48,7 +48,6 @@ class telaTabelaFaturas(ABC):
         data_atual_str = self.data_atual.strftime('%Y/%m/%d')
         seis_meses_anterior_str = self.seis_meses_anterior.strftime('%Y/%m/%d')
         self.listas = Faturas.obterListaFaturas("normal",self.codigoConvenio,400, seis_meses_anterior_str, data_atual_str,self.token)
-        print(self.listas)
         self.show_data()
         # self.after(0, self.show_data, self.listas)
 
@@ -257,7 +256,7 @@ class telaTabelaFaturas(ABC):
         threading.Thread(target=self.exec_busca_faturas_escaneadsas).start()
         
     def exec_busca_faturas_escaneadsas(self):
-        sleep(2)
+        sleep(1)
         self.listaTela = self.obterFaturasTela()
         listaCaminhoFaturas = ObterCaminho.IniciarBusca(self.listaTela, self.codigoConvenio)
         listaCaminhoFaturas.sort_values('Status Envio', ascending=False, inplace=True)
