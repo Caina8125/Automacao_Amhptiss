@@ -162,7 +162,7 @@ class telaTabelaFaturas(ABC):
             df_treeview = obj.inicia_automacao(dados_faturas=dados_faturas, df_treeview=df_treeview, token=self.token)
 
         else:
-            df_treeview = obj.inicia_automacao(dados_fatura=faturas, df_treeview=df_treeview)
+            df_treeview = obj.inicia_automacao(df_treeview=df_treeview, token=self.token)
 
         ImageLabel.ocultarGif(self)
         self.reiniciarTreeView(df_treeview.values.tolist())

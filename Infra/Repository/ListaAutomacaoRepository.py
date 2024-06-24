@@ -1,14 +1,6 @@
 def obterListaFaturamento():
     automacaoFaturamento = ["Faturamento - Anexar Guia Geap",
-                            "Faturamento - Conferência GEAP",
-                            "Faturamento - Conferência Bacen",
-                            "Faturamento - Enviar PDF Bacen",
-                            "Faturamento - Enviar PDF BRB",
-                            "Faturamento - Enviar PDF GDF",
-                            "Faturamento - Enviar XML Bacen",
-                            "Faturamento - Verificar Situação BRB",
-                            "Faturamento - Verificar Situação Fascal",
-                            "Faturamento - Verificar Situação Gama",]
+                            "Faturamento - Enviar PDF GDF",]
     return automacaoFaturamento
 
 def obterListaFinanceiro():

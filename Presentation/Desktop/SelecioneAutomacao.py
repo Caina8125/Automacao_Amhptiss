@@ -1,17 +1,8 @@
 from abc import ABC, abstractmethod
 import threading
 import customtkinter
-from PIL import Image, ImageTk
-from Presentation.Desktop.Gif import ImageLabel
-import Application.AppService.ChamarTabelaAppService as Tabela
+from PIL import Image
 import Application.AppService.ObterAutomacaoSetorAppService as AutomacoesAppService
-from Presentation.Desktop.FaturasPreFaturadas import telaTabelaFaturas
-from Application import AppService
-import Application.AppService.AutomacaoService as automacoes
-import time
-import tkinter as tk
-
-from Presentation.Desktop.SelecaoUmaPasta import SelecaoUmaPasta
 
 
 class TelaSelecioneAutomacoes(ABC):
