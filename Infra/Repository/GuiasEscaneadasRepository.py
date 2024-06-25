@@ -17,7 +17,7 @@ def BuscarGuiasEscaneadas(listas,caminho, cod_convenio):
     for index, linha in listas.iterrows():
         if cod_convenio == 225:
             arquivoFatura = linha["Fatura"]
-        if cod_convenio == 433:
+        elif cod_convenio == 433:
             arquivoFatura = f'LOTE {linha["Protocolo"]}.pdf'.replace('.0', '')
         else:
             arquivoFatura = linha["Fatura"]+'.pdf'

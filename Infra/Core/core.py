@@ -17,7 +17,10 @@ class Core:
                    (pdf_path, xml_path)
             tuple: (None, None) se os arquivos ou diretório não forem encontrados.
         """
-        base_dir = r"\\10.0.0.239\financeiro - faturamento\IMPRESSÃO DE NFE\SIS"
+        try:
+            base_dir = r"\\10.0.0.239\financeiro - faturamento\IMPRESSÃO DE NFE\SIS"
+        except:
+            base_dir = ''
         remessa_dir = os.path.join(base_dir, remessa)
 
         if not os.path.isdir(remessa_dir):
@@ -38,23 +41,24 @@ class Core:
                 xml_path if xml_path and os.path.isfile(xml_path) else None)
     
     @staticmethod
-    def criar_pasta_e_armazenar_arquivos(destino_dir: str, arquivos: list[str]):
+    def criar_pasta_e_armazenar_arquivos(destino_dir, arquivos_com_novos_nomes):
         """
-        Cria um diretório e armazena os arquivos especificados nele.
+        Cria um diretório e armazena os arquivos especificados nele, renomeando-os.
 
         Args:
             destino_dir (str): O caminho do diretório onde os arquivos serão armazenados.
-            arquivos (list): Lista de caminhos de arquivos a serem copiados.
+            arquivos_com_novos_nomes (dict): Dicionário mapeando caminhos de arquivos originais para novos nomes de arquivos.
 
         Returns:
-            bool: True se os arquivos foram copiados com sucesso, False caso contrário.
+            bool: True se os arquivos foram copiados e renomeados com sucesso, False caso contrário.
         """
         try:
             os.makedirs(destino_dir, exist_ok=True)
-            for arquivo in arquivos:
-                if arquivo and os.path.isfile(arquivo):
-                    shutil.copy2(arquivo, destino_dir)
+            for original_path, new_name in arquivos_com_novos_nomes.items():
+                if original_path and os.path.isfile(original_path):
+                    destino_path = os.path.join(destino_dir, new_name)
+                    shutil.copy2(original_path, destino_path)
             return True
-        
         except Exception as e:
+            print(f"Erro ao criar a pasta ou copiar arquivos: {e}")
             return False
