@@ -46,6 +46,9 @@ class ImageLabel(customtkinter.CTkLabel):
         self.lbl.pack(padx=10, pady=10)
         self.lbl.load(r"Infra\Arquivos\loader2.gif")
 
+    def atualizaLabel(self, texto):
+        self.info.configure(text=texto)
+
     def ocultarGif(self):
         self.frames = None
         self.info.pack_forget()

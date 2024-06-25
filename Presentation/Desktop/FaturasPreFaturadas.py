@@ -152,13 +152,23 @@ class telaTabelaFaturas(ABC):
     def exec_automacao(self, obj):
         faturas = self.obterFaturasEncontradas()
         df = DataFrame(faturas)
-        df_treeview = DataFrame(self.get_treeview_data())
+        colunas_df = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
+        df.columns = colunas_df
+        
+        if self.codigoConvenio == 160:
+            ImageLabel.atualizaLabel(self, 'Obtendo números da nota fiscal...')
+            df_treeview = self.get_nf_fatura(DataFrame(self.get_treeview_data()))
+            colunas_df.append('Nota Fiscal')
+            ImageLabel.atualizaLabel(self, 'Enviando no portal...')
+        else:
+            df_treeview = DataFrame(self.get_treeview_data())
 
-        df.columns = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
-        df_treeview.columns = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
+        df_treeview.columns = colunas_df
 
         if self.codigoConvenio == 225:
+            ImageLabel.atualizaLabel(self, 'Obtendo as guias das faturas...')
             dados_faturas = self.get_guias_fatura(df)
+            ImageLabel.atualizaLabel(self, 'Enviando no portal...')
             df_treeview = obj.inicia_automacao(dados_faturas=dados_faturas, df_treeview=df_treeview, token=self.token)
 
         else:
@@ -174,6 +184,18 @@ class telaTabelaFaturas(ABC):
         self.botaoDark2 = customtkinter.CTkButton(self.tela,text="",image=self.photoPaz, hover_color="White",fg_color="transparent",bg_color="transparent",command=lambda: threading.Thread(target=self.modoEscuro()).start())
         self.botaoDark2.pack()
 
+    def get_nf_fatura(self, df_treeview: DataFrame):
+        df_treeview['Nota Fiscal'] = ''
+        faturas_list = df_treeview[0].values.tolist()
+
+        for fatura in faturas_list:
+            n_nota_fiscal = Guias.obterNotaFiscalFatura("normal", self.codigoConvenio, fatura, self.token)
+            if isinstance(n_nota_fiscal, str):
+                n_nota_fiscal = n_nota_fiscal.split('/')[1]
+                df_treeview.loc[df_treeview[0] == fatura, 'Nota Fiscal'] = n_nota_fiscal
+    
+        return df_treeview
+
     def get_guias_fatura(self, df: DataFrame):
         dict_cols = {j: i for i, j in enumerate(df.columns)}
         lista = {"faturas": []}
@@ -182,7 +204,7 @@ class telaTabelaFaturas(ABC):
             fatura = row[dict_cols['Fatura']]
             caminho = row[dict_cols['Caminho']]
             protocolo = row[dict_cols['Protocolo']]
-            lista_guias = Guias.obterListaGuias("normal", 225, fatura, self.token)
+            lista_guias = Guias.obterListaGuias("normal", self.codigoConvenio, fatura, self.token)
 
             dados_guia = []
 

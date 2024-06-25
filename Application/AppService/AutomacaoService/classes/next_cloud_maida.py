@@ -53,6 +53,12 @@ class NextCloudMaida(PageElement):
         self.driver.find_element(*self.span_envio_faturamento).click()
         sleep(1)
 
+    def gerar_lista_paths(self):
+        if self.convenio == 160:
+            ...
+        else:
+            ...
+
     def inicia_automacao(self, **kwargs):
         df_treeview: DataFrame = kwargs.get('df_treeview')
         token: str = kwargs.get('token')
