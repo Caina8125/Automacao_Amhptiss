@@ -56,7 +56,7 @@ class Login:
         self.botaoLogar.pack_forget()
 
     def reiniciarTelaLogin(self):
-        ImageLabel.ocultarGif()
+        ImageLabel.ocultarGif(self)
         self.login.pack(padx=10, pady=10)
         self.email.pack(padx=10, pady=10)
         self.senha.pack(padx=10, pady=10)
