@@ -87,7 +87,7 @@ from .Demonstrativo_Gama import BaixarDemonstrativosGama
 #__________________________________________________________________
 
 #Next cloud Maida
-from .classes.next_cloud_maida import NextCloudMaida
+from .classes.next_cloud_maida_envio import NextCloudMaidaEnvio
 
 __all__ = [
     "AnexarGuiaGeap",

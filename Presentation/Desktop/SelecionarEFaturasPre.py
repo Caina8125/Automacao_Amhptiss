@@ -41,13 +41,13 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas):
                 # telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.EnviarPdf(),codigoConvenio=10, setor=self.setorUsuario)
 
             case "Faturamento - Enviar PDF GDF":
-                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaida('https://nextcloud.maida.health/login', 433, '735860000173', 'nopaperpass'),codigoConvenio=433, setor=self.setorUsuario)
+                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaidaEnvio('https://nextcloud.maida.health/login', 433, '735860000173', 'nopaperpass'),codigoConvenio=433, setor=self.setorUsuario)
             
             case "Faturamento - Enviar PDF PMDF":
-                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaida('https://nextcloud.maida.health/login', 381, '735860000173', 'nopaperpass'),codigoConvenio=381, setor=self.setorUsuario)
+                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaidaEnvio('https://nextcloud.maida.health/login', 381, '735860000173', 'nopaperpass'),codigoConvenio=381, setor=self.setorUsuario)
 
             case "Faturamento - Enviar PDF SIS":
-                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaida('https://nextcloud.maida.health/login', 160, '735860000173', 'nopaperpass'),codigoConvenio=160, setor=self.setorUsuario)
+                self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaidaEnvio('https://nextcloud.maida.health/login', 160, '735860000173', 'nopaperpass'),codigoConvenio=160, setor=self.setorUsuario)
 
             case "Faturamento - Enviar XML Bacen":
                 ...
