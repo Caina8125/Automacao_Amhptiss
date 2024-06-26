@@ -44,6 +44,7 @@ class PageElement(ABC):
                 self.driver = wire_driver.Chrome(service=servico, seleniumwire_options= options, options = chrome_options)
             except:
                 self.driver = wire_driver.Chrome(seleniumwire_options= options, options = chrome_options) 
+            return
         
         chrome_options: Options = Options()
         chrome_options.add_argument("--start-maximized")

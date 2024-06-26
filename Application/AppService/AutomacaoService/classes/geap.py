@@ -139,7 +139,7 @@ class Geap(PageElement):
                     n_processo = int(fatura['fatura'])
                     protocolo = fatura['protocolo']
                     guias = fatura['lista_guias']
-                    #
+                    option.click()
 
                     if not self.click_option(self.select_nr, protocolo):
                         continue
