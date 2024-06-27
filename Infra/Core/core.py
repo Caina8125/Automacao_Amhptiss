@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import shutil
 
@@ -61,4 +62,12 @@ class Core:
             return True
         except Exception as e:
             print(f"Erro ao criar a pasta ou copiar arquivos: {e}")
+            return False
+        
+    @staticmethod    
+    def is_date(string, date_format='%Y-%m-%d'):
+        try:
+            datetime.strptime(string, date_format)
+            return True
+        except ValueError:
             return False

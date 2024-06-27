@@ -5,7 +5,9 @@ import Application.AppService.AutomacaoService as automacoes
 import tkinter as tk
 import customtkinter
 
-class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas):
+from Presentation.Desktop.TelaBuscaProtocolo import tela_busca_protocolo
+
+class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas, tela_busca_protocolo):
     def __init__(self, setorUsuario, janela, token):
         self.iniciar_tela_selecione(setorUsuario, janela, token)
 
@@ -29,6 +31,9 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas):
 
             case "Faturamento - Conferência Bacen":
                 ...
+
+            case "Faturamento - Conferência Envio GDF":
+                self.tela_busca_protocolo(janela=self.tela,token=token,obj=automacoes.Geap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2024', 'normal'),codigoConvenio=433, setor=self.setorUsuario)
 
             case "Faturamento - Enviar PDF Bacen":
                 ...
