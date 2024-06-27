@@ -33,7 +33,7 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas, tela_busc
                 ...
 
             case "Faturamento - Conferência Envio GDF":
-                self.tela_busca_protocolo(janela=self.tela,token=token,obj=automacoes.Geap('https://www2.geap.com.br/auth/prestadorVue.asp', '66661692120', 'Amhp2024', 'normal'),codigoConvenio=433, setor=self.setorUsuario)
+                self.tela_busca_protocolo(janela=self.tela,token=token,obj=automacoes.GDFConferenciaLotes(),codigoConvenio=433, setor=self.setorUsuario)
 
             case "Faturamento - Enviar PDF Bacen":
                 ...

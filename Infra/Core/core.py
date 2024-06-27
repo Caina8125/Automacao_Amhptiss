@@ -71,3 +71,7 @@ class Core:
             return True
         except ValueError:
             return False
+        
+    @staticmethod
+    def formatar(valor: str):
+        return valor.replace('.', '').replace(',', '.')

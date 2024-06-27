@@ -129,6 +129,7 @@ class telaTabelaFaturas(ABC):
         # self.botaoRemover.place(x=280, y=340)
 
         self.botaoBuscarFaturas = customtkinter.CTkButton(self.container4, width=80,text="Buscar Faturas Escaneadas ", command=lambda: threading.Thread(target=self.buscarFaturas).start())
+        self.botaoRemoverFaturasEnviadas = ctk.CTkButton(self.container4, fg_color="#058288",width=80,text="Remover Faturas Enviadas", command=lambda: threading.Thread(target=self.remover()).start())
         # self.botaoBuscarFaturas.pack(padx=10, pady=10)
 
     def get_treeview_data(self):

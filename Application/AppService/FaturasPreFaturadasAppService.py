@@ -16,6 +16,6 @@ def get_faturas_data(tipoNegociacao, convenioId, statusProcesso, dataInicio, dat
     if convenioId == 381:
         lista.extend(apiFaturamento(tipoNegociacao, 457, statusProcesso, dataInicio, dataFim,token))
 
-    listaFat = [[item['processoId'], item['protocoloItem'], item['remessaId'],item['quantidadeGuias'], item['valorTotal'], '']  for item in lista]
+    listaFat = [[item['processoId'], str(item['protocoloItem']), item['remessaId'],item['quantidadeGuias'], item['valorTotal'], '']  for item in lista if item['protocoloItem'] != None]
 
     return listaFat

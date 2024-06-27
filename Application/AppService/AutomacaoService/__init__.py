@@ -4,6 +4,7 @@
 # from .classes.enviar_xml_benner import enviar_xml_benner
 
 #_________________________________________________________________
+from.classes.gdf_conferencia_lotes import GDFConferenciaLotes
 from .classes.conferencia_protocolos import ConferenciaProtocolos
 from .classes.orizon import Orizon
 from .classes.tst import Tst

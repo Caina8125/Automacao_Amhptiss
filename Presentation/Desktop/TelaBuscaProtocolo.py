@@ -1,11 +1,16 @@
 from abc import ABC
 from datetime import datetime
+import tkinter
+from tkinter.filedialog import askopenfilenames
+from tkinter.messagebox import showwarning
 from dateutil.relativedelta import relativedelta
 from tkinter import *
 from tkinter import ttk
 import customtkinter as ctk
 from PIL import Image
 import threading
+
+from pandas import DataFrame
 
 from Presentation.Desktop.Gif import ImageLabel
 import Application.AppService.FaturasPreFaturadasAppService as Faturas
@@ -15,6 +20,7 @@ class tela_busca_protocolo(ABC):
         super().__init__()
         self.data_atual = datetime.now()
         self.seis_meses_anterior = self.data_atual - relativedelta(months=6)
+        self.obj = obj
         self.tela = janela
         self.container1 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container1.pack()
@@ -47,13 +53,17 @@ class tela_busca_protocolo(ABC):
     def show_data_busca(self):
         ImageLabel.ocultarGif(self)
         # self.ocultarBotaoDark()
-        img = ctk.CTkImage(light_image = Image.open(r"Infra\Arquivos\voltar.png"), size=(20,30))
+        img_voltar = ctk.CTkImage(light_image = Image.open(r"Infra\Arquivos\voltar.png"), size=(20,30))
+        img_select_all = ctk.CTkImage(light_image = Image.open(r"Infra\Arquivos\select_all.png"), size=(30,40))
 
         # self.exibirBotaoDark()
         self.treeViewBusca(listas=self.listas)
-        self.botaoConferirEnvio.pack(padx=10, pady=10)
-        self.botaoVoltar = ctk.CTkButton(self.tela, hover=False, fg_color='#274360', bg_color="#274360", width=80, text="", image=img, command=self.botao_voltar_click)
+        self.botaoConferirEnvio.pack(side=LEFT, pady=20, padx=30)
+        self.botaoRemover.pack(side=LEFT, pady=20, padx=30)
+        self.botaoVoltar = ctk.CTkButton(self.tela, hover=False, fg_color='#274360', bg_color="#274360", width=80, text="", image=img_voltar, command=self.botao_voltar_click)
         self.botaoVoltar.place(y=1, x=1)
+        self.botaoSelectAll = ctk.CTkButton(self.tela, hover=False, fg_color='transparent', bg_color="transparent",width=80,text="", image=img_select_all, command=self.toggle_selection)
+        self.botaoSelectAll.place(y=103, x=0)
 
     def treeViewBusca(self, listas):
         self.qtd = len(listas) 
@@ -95,10 +105,70 @@ class tela_busca_protocolo(ABC):
         
         # self.botaoRemover.place(x=280, y=340)
 
-        self.botaoRemoverFaturasEnviadas = ctk.CTkButton(self.container4, fg_color="#058288",width=80,text="Remover Faturas Enviadas", command=lambda: threading.Thread(target=self.remover()).start())
+        self.botaoRemover = ctk.CTkButton(self.container4, fg_color="#b30505",width=80,text="Remover",command=lambda: threading.Thread(target=self.remover_busca).start())
         # self.botaoRemover.place(x=280, y=340)
 
         self.botaoConferirEnvio = ctk.CTkButton(self.container4, width=80,text="Conferir Envio", command=lambda: threading.Thread(target=self.conferir_envio).start())
+    
+    def get_treeview_data(self):
+        full_treeview = []
+
+        for row in self.my_tree.get_children():
+            full_treeview.append(self.my_tree.item(row)["values"])
+        return full_treeview
 
     def conferir_envio(self):
-        ...
+        df_treeview = DataFrame(self.get_treeview_data())
+        if df_treeview.empty:
+            tkinter.messagebox.showwarning('', 'Não há faturas para conferir!')
+            return
+        self.ocultarTreeViewBuscar()
+        self.botaoRemover.place_forget()
+        self.botaoSelectAll.place_forget()
+        self.botaoConferirEnvio.place_forget()
+        self.botaoVoltar.configure(state="disabled")
+        ImageLabel.iniciarGif(self,janela=self.container2,texto="Conferindo envios...")
+        threading.Thread(target=self.exec_automacao_busca, args=(df_treeview,)).start()
+
+    def exec_automacao_busca(self, df_treeview):
+        df_treeview.columns = ["Fatura", "Protocolo", "Remessa", "Quantidade", "Valor Total", "Status"]
+        showwarning('', 'Selecione Protocolos de Recebimentos!')
+        files_path_list = askopenfilenames()
+        df_treeview = self.obj.inicia_automacao(df_treeview=df_treeview, files_path_list=files_path_list)
+        ImageLabel.ocultarGif(self)
+        self.reiniciarTreeViewBusca(df_treeview.values.tolist())
+        self.botaoVoltar.configure(state="normal")
+
+    def reiniciarTreeViewBusca(self,listaAtualizada):
+        # self.botaoRemoverFaturasEnviadas.place(x=318, y=420)
+        # self.botaoDark.pack()
+        self.treeViewBusca(listaAtualizada)
+        self.botaoConferirEnvio.pack(side=LEFT, pady=20, padx=30)
+        self.botaoRemover.pack(side=LEFT, pady=20, padx=30)
+        
+    def ocultarTreeViewBuscar(self):
+        try:
+            self.botaoConferirEnvio.pack_forget()
+            self.botaoRemover.pack_forget()
+        except:
+            pass
+        self.scrollbar.pack_forget()
+        self.texto.pack_forget()
+        self.my_tree.pack_forget()
+
+    def remover_busca(self):
+        itenSelecionado = self.my_tree.selection()
+        try:
+            for iten in itenSelecionado:
+                self.my_tree.delete(iten)
+        except:
+            tkinter.messagebox.showinfo("Erro", f"Selecione uma fatura para remover")
+
+    def toggle_selection(self):
+        all_items = self.my_tree.get_children()
+        selected_items = self.my_tree.selection()
+        
+        if len(all_items) == len(selected_items):
+            self.my_tree.selection_remove(all_items)
+        else:
+            self.my_tree.selection_set(all_items)
