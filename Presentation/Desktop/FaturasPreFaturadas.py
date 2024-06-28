@@ -25,7 +25,7 @@ class telaTabelaFaturas(ABC):
         self.container1 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container1.pack()
         self.container2 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
-        self.container2.pack(pady=30)
+        self.container2.pack()
         self.container3 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container3.pack()
         self.container4 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
@@ -38,13 +38,13 @@ class telaTabelaFaturas(ABC):
         self.codigoConvenio = codigoConvenio
         self.token = token
         self.corJanela = "light"
+        self.exibirBotaoDark()
 
         if nome == "Geap":
-            self.exibirBotaoDark()
             self.text_area = ctk.CTkEntry(self.container2, placeholder_text="Digite o número de varias remessas.", width=400)
             self.text_area.pack()
             self.botaoStart = customtkinter.CTkButton(self.container3, fg_color="#274360",width=80,text="Enviar", command=lambda: threading.Thread(target=self.iniciar_geap).start())
-            self.botaoStart.pack()
+            self.botaoStart.pack(pady=30)
 
         else:
             ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas no \nAMHPTISS...")
