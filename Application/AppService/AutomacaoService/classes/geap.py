@@ -113,7 +113,7 @@ class Geap(PageElement):
         lista_relatorio_guia = []
         data_atual = datetime.now()
         try:
-            self.init_driver()
+            self.init_driver(py_auto_gui=True)
             self.open()
             self.exe_login()
             self.exe_caminho()

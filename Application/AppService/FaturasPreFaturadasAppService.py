@@ -6,7 +6,7 @@ def obterListaFaturasPorRemessa(lista_remessa, tipo_negociacao, token, convenio_
         lista = get_processos_por_remessa(tipo_negociacao, remessa, token, convenio_id)
         faturas_dict_list.extend(lista)
         
-    listaFat = [[item['processoId'], item['remessaId'], item['apelido'],item['usuarioLanca'], item['protocoloItem'], item['envioGuiaPortal'], '', '', f'\\\\10.0.0.239\\guiasscaneadas\\2024\GEAP\\{item["processoId"]}.pdf']  for item in faturas_dict_list]
+    listaFat = [[item['processoId'], item['remessaId'], item['apelido'],item['usuarioLanca'], item['protocoloItem'], item['envioGuiaPortal'], '', '', f'\\\\10.0.0.239\\guiasscaneadas\\2024\GEAP\\{item["processoId"]}']  for item in faturas_dict_list]
 
     return listaFat
 
