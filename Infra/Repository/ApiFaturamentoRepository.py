@@ -56,3 +56,22 @@ def post_status_envio_operadora(tipo_negociacao, processo_id, envio, token):
 
     response = requests.post(url=url_api, headers=headers, data=data, verify=False)
     return response.status_code
+
+def get_processos_por_remessa(tipo_negociacao, remessa_id, token, convenio_id):
+    url_api = f'http://10.0.0.142:9000/api/faturamento/{tipo_negociacao}/processo-por-remessa/{convenio_id}/{remessa_id}/S'
+
+    data = {
+        'tipoNegociacao': tipo_negociacao,
+        'convenioId': convenio_id,
+        'remessaId': remessa_id,
+        'incluirRecurso': "S" 
+    }
+
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'api-key': '8EC08ED9-94DC-413E-9A29-BC211A9BEA30'
+    }
+
+    response = requests.get(url=url_api, headers=headers, data=data, verify=False)
+    content = json.loads(response.content)
+    return content

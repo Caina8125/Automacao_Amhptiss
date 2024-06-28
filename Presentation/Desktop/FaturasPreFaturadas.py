@@ -17,7 +17,7 @@ import Application.AppService.GuiasFaturaAppService as Guias
 import Application.AppService.ObterCaminhoFaturasAppService as ObterCaminho
 
 class telaTabelaFaturas(ABC):
-    def tela_tabela_faturas(self, janela,token,obj,codigoConvenio, setor):
+    def tela_tabela_faturas(self, janela,token,obj,codigoConvenio, setor, nome):
         super().__init__()
         self.data_atual = datetime.now()
         self.seis_meses_anterior = self.data_atual - relativedelta(months=6)
@@ -25,7 +25,7 @@ class telaTabelaFaturas(ABC):
         self.container1 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container1.pack()
         self.container2 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
-        self.container2.pack()
+        self.container2.pack(pady=30)
         self.container3 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
         self.container3.pack()
         self.container4 = ctk.CTkFrame(self.tela, bg_color='transparent', fg_color='transparent')
@@ -35,15 +35,43 @@ class telaTabelaFaturas(ABC):
         self.token = token
         self.setorUsuario = setor
         self.obj = obj
-        self.exibirBotaoDark()
-        ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas no \nAMHPTISS...")
-        
         self.codigoConvenio = codigoConvenio
         self.token = token
         self.corJanela = "light"
 
-        threading.Thread(target=self.pegar_dados).start()
+        if nome == "Geap":
+            self.exibirBotaoDark()
+            self.text_area = ctk.CTkEntry(self.container2, placeholder_text="Digite o número de varias remessas.", width=400)
+            self.text_area.pack()
+            self.botaoStart = customtkinter.CTkButton(self.container3, fg_color="#274360",width=80,text="Enviar", command=lambda: threading.Thread(target=self.iniciar_geap).start())
+            self.botaoStart.pack()
+
+        else:
+            ImageLabel.iniciarGif(self,janela=self.container2,texto="Buscando faturas no \nAMHPTISS...")
+            threading.Thread(target=self.pegar_dados).start()
+
+    def iniciar_geap(self):
+        self.text_area.pack_forget()
+        self.botaoStart.pack_forget()
+        ImageLabel.iniciarGif(self,janela=self.container2,texto="Enviando..")
+        remessas_list = self.text_area.get().split(', ')
+        faturas_list = Faturas.obterListaFaturasPorRemessa(remessas_list, 'normal', self.token, 225)
+        df = DataFrame(faturas_list)
+        colunas_df = ['Fatura', 'Remessa', 'Convênio', 'Usuário', 'Protocolo', 'Envio Operadora', 'Status Fatura', 'Nome Arquivo', 'Caminho']
+        df.columns = colunas_df
+
+        df_treeview = df
+        # ImageLabel.atualizaLabel(self, 'Obtendo as guias das faturas...')
+        dados_faturas = self.get_guias_fatura(df)
+        # ImageLabel.atualizaLabel(self, 'Enviando no portal...')
+        threading.Thread(target=self.iniciar_geap2, args=(dados_faturas, df_treeview)).start()
         
+    def iniciar_geap2(self, dados_faturas, df_treeview):
+        self.obj.inicia_automacao(dados_faturas=dados_faturas, df_treeview=df_treeview, token=self.token)
+        ImageLabel.ocultarGif(self)
+        self.text_area.pack()
+        self.botaoStart.pack()
+
     def pegar_dados(self):
         data_atual_str = self.data_atual.strftime('%Y/%m/%d')
         seis_meses_anterior_str = self.seis_meses_anterior.strftime('%Y/%m/%d')

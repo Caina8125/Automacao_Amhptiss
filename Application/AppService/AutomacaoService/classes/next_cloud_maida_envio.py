@@ -44,7 +44,7 @@ class NextCloudMaidaEnvio(NextCloudMaidaContext):
             self.caminho()
 
             self.driver.find_element(*self.input_type_file).send_keys('\n'.join(paths_list))
-            sleep(2)
+            sleep(3)
 
             self.df_treeview['Status Fatura'] = self.df_treeview['Status Fatura'].replace('Fatura Encontrada', 'Parcialmente Enviada')
 

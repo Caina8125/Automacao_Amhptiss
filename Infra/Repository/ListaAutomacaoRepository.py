@@ -1,5 +1,7 @@
 def obterListaFaturamento():
-    automacaoFaturamento = ["Faturamento - Anexar Guia Geap",
+    automacaoFaturamento = ["Geap",
+                            "Faturamento - Anexar Guia Geap",
+                            "Faturamento - Conferência Envio GDF",
                             "Faturamento - Conferência Envio GDF",
                             "Faturamento - Enviar PDF GDF",
                             # "Faturamento - Enviar PDF PMDF",
