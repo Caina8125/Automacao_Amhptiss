@@ -79,7 +79,10 @@ class NextCloudMaidaEnvio(NextCloudMaidaContext):
         except:
             pass
         
-        self.df_treeview.drop('Nota Fiscal', axis=1)
+        try:
+            self.df_treeview.drop('Nota Fiscal', axis=1)
+        except:
+            pass
 
         return self.df_treeview
     

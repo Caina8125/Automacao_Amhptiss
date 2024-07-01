@@ -16,7 +16,11 @@ class FacilContext(PageElement):
     i_clip = By.CLASS_NAME, 'fa-paperclip'
     modal_envio_arquivo = By.XPATH, '/html/body/main/div[1]/div[4]/div/div'
     input_type_file = By.XPATH, '/html/body/main/div[1]/div[4]/div/div/div[2]/div/div/div/div[2]/div[1]/input-file/div/div/div[1]/div/div/input'
-    fechar_modal = By.XPATH, '/html/body/main/div[1]/div[4]/div/div/div[3]/buttons'
+    fechar_modal = By.XPATH, '/html/body/main/div[1]/div[4]/div/div/div[3]/button'
+    adicionar_arquivo = By.XPATH, '/html/body/main/div[1]/div[4]/div/div/div[2]/div/div/div/div[2]/div[1]/input-file/div/div/div[1]/div/div/div[1]/div[2]/button'
+    span_arquivo = By.XPATH, '/html/body/main/div[1]/div[4]/div/div/div[2]/div/div/div/div[2]/div[2]/div/div/table/tbody/tr/td[1]/span'
+    clip1 = By.XPATH, '/html/body/main/div/div[2]/div/div[2]/div[1]/div[1]/div/div[5]/button[1]'
+    btn_ignorar = By.ID, 'btnIngorar'
 
     def __init__(self, url, codigo_convenio) -> None:
         super().__init__(url)

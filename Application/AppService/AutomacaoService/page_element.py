@@ -55,8 +55,8 @@ class PageElement(ABC):
         except:
             self.driver = webdriver.Chrome(options = chrome_options)
             
-        self.open()
-        sleep(4)
+        self.driver.get('https://www2.geap.com.br/auth/prestadorVue.asp')
+        sleep(1)
         pyautogui.write('faturamento.fat')
         pyautogui.press("TAB")
         sleep(0.5)
