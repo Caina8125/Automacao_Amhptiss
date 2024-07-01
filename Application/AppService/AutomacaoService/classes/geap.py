@@ -15,7 +15,7 @@ class Geap(PageElement):
     input_senha = By.XPATH, '/html/body/div[1]/div[2]/div/div/div[1]/div/div/div/div/div[2]/div/div[1]/div/label[2]/div/div[1]/div[1]/input'
     entrar = By.XPATH, '/html/body/div[1]/div[2]/div/div/div[1]/div/div/div/div/div[2]/div/div[2]/button/div[2]/div/div'
     fechar = By.XPATH, '/html/body/div[4]/div[2]/div/div[3]/button'
-    portal_tiss = (By.XPATH, '/html/body/div[1]/div/div[2]/div/div[1]/div[1]/div[1]/div/div')
+    portal_tiss = (By.XPATH, '/html/body/div[1]/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div')
     alerta = By.XPATH,' /html/body/div[2]/div/center/a'
     a_tiss = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/a'
     anexo_conta = By.XPATH, '/html/body/div[1]/nav/ul/li[3]/ul/li[7]/a'
@@ -52,7 +52,6 @@ class Geap(PageElement):
             self.driver.find_element(*self.input_senha).send_keys(self.senha)
             sleep(2)
             self.driver.find_element(*self.entrar).click()
-            self.driver.find_element(*self.entrar).click()
             sleep(2)
             self.driver.find_element(*self.portal_tiss)
 
@@ -64,7 +63,8 @@ class Geap(PageElement):
 
 
     def exe_caminho(self):
-        sleep(5)
+        self.driver.find_element(*self.portal_tiss)
+        sleep(3)
         self.driver.implicitly_wait(3)
         try:
             lista = [element for element in self.driver.find_elements(By.TAG_NAME, 'i') if element.text == 'close']
