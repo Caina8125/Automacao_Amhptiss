@@ -66,6 +66,7 @@ class PageElement(ABC):
 
     def open(self) -> None:
         self.driver.get(self.url)
+        self.driver.implicitly_wait(30)
 
     def get_attribute_value(self, element: tuple, atributo: str) -> str | None:
         return self.driver.find_element(*element).get_attribute(atributo)

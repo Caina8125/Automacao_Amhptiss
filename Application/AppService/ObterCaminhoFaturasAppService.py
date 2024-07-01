@@ -30,8 +30,10 @@ def ObterCaminhosFaturaUsuario(dataFrame,codigoConvenio):
             case 160:
                 caminho = r"\\10.0.0.239\guiasscaneadas\2024\SIS"
                 return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho, codigoConvenio)
+            case 216:
+                caminho = r"\\10.0.0.239\guiasscaneadas\2024\E-VIDA"
+                return GuiasEscaneadas.BuscarGuiasEscaneadas(faturasUsuario,caminho, codigoConvenio)
         
-
 def IniciarBusca(lista,codigoConvenio):
     df = TrasformarDataFrame(lista)
     # robo = ObterCaminhosFaturaRobo(df)ks

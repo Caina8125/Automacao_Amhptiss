@@ -48,6 +48,9 @@ class SelecionarFaturasPre(TelaSelecioneAutomacoes, telaTabelaFaturas, tela_busc
                 ...
                 # telaTabelaFaturas(janela=self.tela,token=token,obj=automacoes.EnviarPdf(),codigoConvenio=10, setor=self.setorUsuario)
 
+            case "Faturamento - Enviar PDF E-Vida":
+                self.tela_tabela_faturas(self.tela, token, automacoes.FacilEnviarGuias('https://novowebplanevida.facilinformatica.com.br', 216, '00735860000173', '00735860000173'), 216, self.setorUsuario, nome=automacaoSelecionada)
+
             case "Faturamento - Enviar PDF GDF":
                 self.tela_tabela_faturas(janela=self.tela,token=token,obj=automacoes.NextCloudMaidaEnvio('https://nextcloud.maida.health/login', 433, '735860000173', 'nopaperpass'),codigoConvenio=433, setor=self.setorUsuario, nome=automacaoSelecionada)
             

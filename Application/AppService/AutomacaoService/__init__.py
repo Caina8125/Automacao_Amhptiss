@@ -20,6 +20,7 @@ from .leitor_de_pdf_gama import PDFReader
 #__________________________________________________________________
 
 #Facil_________________________________________________________________________
+from .classes.facil_enviar_guias import FacilEnviarGuias
 from .classes.facil import Facil
 from .recursar_brb import RecursoBrb
 from .recursar_evida import RecursoEvida
